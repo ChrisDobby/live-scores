@@ -32,7 +32,10 @@ export const put = (
   date: string,
   { firstTeam, secondTeam }: ScorecardUrls
 ): Promise<PutItemCommandOutput> => {
-  const dynamoItem: { [key: string]: AttributeValue } = { date: { S: date } };
+  const dynamoItem: { [key: string]: AttributeValue } = {
+    date: { S: date },
+    expiry: { N: `${Math.floor(Date.now() / 1000) + 24 * 60 * 60}` },
+  };
   if (firstTeam) {
     dynamoItem.firstTeam = { S: firstTeam };
   }
