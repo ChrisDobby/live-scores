@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "es2019",
+    "module": "commonjs",
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "declaration": true,
+    "outDir": "./lib",
+  },
+  "include": ["./src/**/*"]
+}
