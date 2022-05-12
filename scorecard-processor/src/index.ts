@@ -28,7 +28,7 @@ const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
   console.log(content);
   const s3 = new S3Client({ region: 'us-east-1' });
   const command = new PutObjectCommand({
-    Bucket: 'cleckheaton-cc-live-scores-test-1',
+    Bucket: 'cleckheaton-cc-live-scores-html',
     Body: content,
     Key: `${s3Prefix}-${new Date().toISOString()}.html`,
   });
