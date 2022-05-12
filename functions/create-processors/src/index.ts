@@ -29,7 +29,7 @@ const createInstance = (teamId: string) => {
     MinCount: 1,
     KeyName: 'test-processor',
     SecurityGroupIds: [process.env.PROCESSOR_SG_ID as string],
-    IamInstanceProfile: { Arn: process.env.PROCESSOR_ROLE_ARN },
+    IamInstanceProfile: { Arn: process.env.PROCESSOR_PROFILE_ARN },
     UserData: Buffer.from(userData).toString('base64'),
   });
 
@@ -44,7 +44,9 @@ const getCreator = (teamId: string, field?: { S: string }) => {
   return createInstance(teamId);
 };
 
-const handleRecord = ({ dynamodb: { NewImage } }) => {
+const handleRecord = async ({
+  dynamodb: { NewImage },
+}): Promise<(RunInstancesCommandOutput | null)[]> => {
   if (!NewImage) {
     return [];
   }
@@ -60,9 +62,9 @@ const handleRecord = ({ dynamodb: { NewImage } }) => {
 };
 
 export const handler = async ({ Records }) => {
-  const result: (RunInstancesCommandOutput | null)[] = await Promise.all(
-    Records.map(handleRecord)
-  );
+  const result: (RunInstancesCommandOutput | null)[] = (
+    await Promise.all(Records.map(handleRecord))
+  ).flat();
 
   await put(
     new Date().toDateString(),

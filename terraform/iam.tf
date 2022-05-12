@@ -144,7 +144,7 @@ resource "aws_iam_policy" "create-processors-dynamo" {
 
 data "aws_iam_policy_document" "create-processors-dynamo" {
   statement {
-    actions = ["dynamodb:GetItem", "dynamodb:Query"]
+    actions = ["dynamodb:PutItem"]
 
     resources = [aws_dynamodb_table.running-processors.arn]
   }
@@ -162,11 +162,11 @@ resource "aws_iam_policy" "create-processors-iam" {
 
 data "aws_iam_policy_document" "create-processors-iam" {
   statement {
-    actions = ["iam:GetRole", "iam: GetInstanceProfile"]
+    actions = ["iam:*"]
 
     resources = [
-      "${aws_iam_role.create-processors-role.arn}/*",
-      "${aws_iam_instance_profile.scorecard-processor-profile.arn}/*"
+      "${aws_iam_role.scorecard-processor-role.arn}",
+      "${aws_iam_instance_profile.scorecard-processor-profile.arn}"
     ]
   }
 }

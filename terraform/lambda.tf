@@ -22,8 +22,8 @@ resource "aws_lambda_function" "create-processors" {
 
   environment {
     variables = merge({
-      PROCESSOR_ROLE_ARN = aws_iam_role.scorecard-processor-role.arn,
-      PROCESSOR_SG_ID    = aws_security_group.allow_ssh.id,
+      PROCESSOR_PROFILE_ARN = aws_iam_instance_profile.scorecard-processor-profile.arn
+      PROCESSOR_SG_ID       = aws_security_group.allow_ssh.id,
     }, {})
   }
 }
