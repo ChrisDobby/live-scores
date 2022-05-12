@@ -16,7 +16,7 @@ const findScorecardTab = async (page: Page) => {
     if (scorecardTab) {
       break;
     }
-
+    console.log('no live scorecard available, waiting to try again..');
     await sleep(300000);
   }
 

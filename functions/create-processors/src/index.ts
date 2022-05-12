@@ -15,6 +15,7 @@ cd cleckheaton-cc
 git checkout live-scores
 cd live-scores/scorecard-processor
 npm i
+npm run build
 npm run start:`;
 
 const client = new EC2Client({ region: 'eu-west-2' });
