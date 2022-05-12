@@ -3,7 +3,6 @@ import {
   RunInstancesCommand,
   RunInstancesCommandOutput,
 } from '@aws-sdk/client-ec2';
-import { put } from './store';
 
 const USER_DATA = `#!/bin/bash
 yum update -y
@@ -31,6 +30,12 @@ const createInstance = (teamId: string) => {
     SecurityGroupIds: [process.env.PROCESSOR_SG_ID as string],
     IamInstanceProfile: { Arn: process.env.PROCESSOR_PROFILE_ARN },
     UserData: Buffer.from(userData).toString('base64'),
+    TagSpecifications: [
+      {
+        ResourceType: 'instance',
+        Tags: [{ Key: 'Owner', Value: 'cleckheaton-cc' }],
+      },
+    ],
   });
 
   return client.send(command);
@@ -62,14 +67,5 @@ const handleRecord = async ({
 };
 
 export const handler = async ({ Records }) => {
-  const result: (RunInstancesCommandOutput | null)[] = (
-    await Promise.all(Records.map(handleRecord))
-  ).flat();
-
-  await put(
-    new Date().toDateString(),
-    result
-      .flatMap((r) => r?.Instances?.map((i) => i.InstanceId))
-      .filter(Boolean) as string[]
-  );
+  await Promise.all(Records.map(handleRecord));
 };
