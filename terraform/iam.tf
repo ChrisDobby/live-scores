@@ -137,24 +137,6 @@ resource "aws_iam_role_policy_attachment" "create-processors-dynamo-stream" {
   policy_arn = aws_iam_policy.create-processors-dynamo-stream.arn
 }
 
-resource "aws_iam_policy" "create-processors-dynamo" {
-  name   = "create-processors-dynamo"
-  policy = data.aws_iam_policy_document.create-processors-dynamo.json
-}
-
-data "aws_iam_policy_document" "create-processors-dynamo" {
-  statement {
-    actions = ["dynamodb:PutItem"]
-
-    resources = [aws_dynamodb_table.running-processors.arn]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "create-processors-dynamo" {
-  role       = aws_iam_role.create-processors-role.name
-  policy_arn = aws_iam_policy.create-processors-dynamo.arn
-}
-
 resource "aws_iam_policy" "create-processors-iam" {
   name   = "create-processors-iam"
   policy = data.aws_iam_policy_document.create-processors-iam.json
@@ -183,7 +165,7 @@ resource "aws_iam_policy" "create-processors-ec2" {
 
 data "aws_iam_policy_document" "create-processors-ec2" {
   statement {
-    actions = ["ec2:RunInstances"]
+    actions = ["ec2:RunInstances", "ec2:CreateTags"]
 
     resources = ["*"]
   }

@@ -15,18 +15,3 @@ resource "aws_dynamodb_table" "live-score-urls" {
     enabled        = true
   }
 }
-
-resource "aws_dynamodb_table" "running-processors" {
-  name         = "cleckheaton-cc-running-processors"
-  hash_key     = "date"
-  billing_mode = "PAY_PER_REQUEST"
-  attribute {
-    name = "date"
-    type = "S"
-  }
-
-  ttl {
-    attribute_name = "expiry"
-    enabled        = true
-  }
-}
