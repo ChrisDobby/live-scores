@@ -175,3 +175,31 @@ resource "aws_iam_role_policy_attachment" "create-processors-ec2" {
   role       = aws_iam_role.create-processors-role.name
   policy_arn = aws_iam_policy.create-processors-ec2.arn
 }
+
+resource "aws_iam_role" "teardown-processors-role" {
+  name               = "teardown-processors"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_role_policy_attachment" "teardown-processors-cloudwatch" {
+  role       = aws_iam_role.teardown-processors-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_policy" "teardown-processors-ec2" {
+  name   = "teardown-processors-ec2"
+  policy = data.aws_iam_policy_document.teardown-processors-ec2.json
+}
+
+data "aws_iam_policy_document" "teardown-processors-ec2" {
+  statement {
+    actions = ["ec2:DescribeInstances", "ec2:TerminateInstances"]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "teardown-processors-ec2" {
+  role       = aws_iam_role.teardown-processors-role.name
+  policy_arn = aws_iam_policy.teardown-processors-ec2.arn
+}

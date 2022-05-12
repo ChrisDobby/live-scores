@@ -41,3 +41,14 @@ resource "aws_lambda_event_source_mapping" "create-processors" {
   batch_size             = 1
   maximum_retry_attempts = 2
 }
+
+resource "aws_lambda_function" "teardown-processors" {
+  function_name    = "teardown-processors"
+  handler          = "lib/index.handler"
+  filename         = "../functions/dist/teardown-processors.zip"
+  source_code_hash = filebase64sha256("../functions/dist/teardown-processors.zip")
+  role             = aws_iam_role.teardown-processors-role.arn
+
+  runtime = "nodejs14.x"
+  timeout = 10
+}
