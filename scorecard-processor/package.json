@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./lib && tsc",
-    "start:1": "ts-node './lib/index.js 1'",
+    "start:1": "ts-node ./src/index.ts 1",
     "start:2": "ts-node ./src/index.ts 2"
   },
   "author": "",
