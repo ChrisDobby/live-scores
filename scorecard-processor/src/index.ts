@@ -53,7 +53,10 @@ const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
     throw new Error(`No scorecard url for ${config.fieldName}`);
   }
 
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
   const page = await browser.newPage();
   await page.goto(urls[config.fieldName]);
 
