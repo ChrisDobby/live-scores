@@ -184,3 +184,32 @@ resource "aws_iam_role_policy_attachment" "teardown-processors-ec2" {
   role       = aws_iam_role.teardown-processors-role.name
   policy_arn = aws_iam_policy.teardown-processors-ec2.arn
 }
+
+resource "aws_iam_role" "create-scorecard-role" {
+  name               = "create-scorecard"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+resource "aws_iam_policy" "create-scorecard-sqs" {
+  name   = "create-scorecard-sqs"
+  policy = data.aws_iam_policy_document.create-scorecard-sqs.json
+}
+
+data "aws_iam_policy_document" "create-scorecard-sqs" {
+  statement {
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+
+    resources = [
+      aws_sqs_queue.first-team-scorecard-html.arn,
+      aws_sqs_queue.second-team-scorecard-html.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "create-scorecard-sqs" {
+  role       = aws_iam_role.create-scorecard-role.name
+  policy_arn = aws_iam_policy.create-scorecard-sqs.arn
+}
