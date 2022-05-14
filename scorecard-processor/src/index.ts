@@ -1,11 +1,5 @@
 import puppeteer, { ElementHandle, Page } from 'puppeteer';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { get } from './store';
-
-const TEAM_CONFIG = {
-  1: { fieldName: 'firstTeam', s3KeyPrefix: '1st-team' },
-  2: { fieldName: 'secondTeam', s3KeyPrefix: '2st-team' },
-};
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -26,7 +20,7 @@ const findScorecardTab = async (page: Page) => {
 const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
   const content = await page.$eval('#nvScorecardTab', (el) => el.innerHTML);
   console.log(content);
-  const s3 = new S3Client({ region: 'us-east-1' });
+  const s3 = new S3Client({ region: 'eu-west-2' });
   const command = new PutObjectCommand({
     Bucket: 'cleckheaton-cc-live-scores-html',
     Body: content,
@@ -38,19 +32,14 @@ const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
 };
 
 (async () => {
-  const teamArg = process.argv[2];
-  if (!teamArg) {
+  const teamId = process.argv[2];
+  if (!teamId) {
     throw new Error('No team specified');
   }
 
-  const config = TEAM_CONFIG[teamArg];
-  if (!config) {
-    throw new Error(`Invalid team: ${teamArg}`);
-  }
-
-  const urls = await get(new Date().toDateString());
-  if (!urls || !urls[config.fieldName]) {
-    throw new Error(`No scorecard url for ${config.fieldName}`);
+  const scorecardUrl = process.argv[3];
+  if (!scorecardUrl) {
+    throw new Error('No scorecard url specified');
   }
 
   const browser = await puppeteer.launch({
@@ -58,7 +47,7 @@ const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
-  await page.goto(urls[config.fieldName]);
+  await page.goto(scorecardUrl);
 
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
   await acceptButton.click();
@@ -66,5 +55,5 @@ const processScorecardHtml = (s3Prefix: string, page: Page) => async () => {
   await findScorecardTab(page);
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(config.s3KeyPrefix, page), 300000);
+  setInterval(processScorecardHtml(teamId, page), 300000);
 })();
