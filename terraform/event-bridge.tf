@@ -20,7 +20,7 @@ resource "aws_lambda_permission" "allow-event-cloudwatch-rule-to-call-urls-cron"
 resource "aws_cloudwatch_event_rule" "teardown-processors-schedule" {
   name                = "teardown-processors-schedule"
   description         = "Triggers teardown processors lambda from cloudwatch"
-  schedule_expression = "cron(0 21 ? APR,MAY,JUN,JUL,AUG,SEP SAT,SUN *)"
+  schedule_expression = "cron(0 20 ? APR,MAY,JUN,JUL,AUG,SEP SAT,SUN *)"
 }
 
 resource "aws_cloudwatch_event_target" "teardown-processors-schedule" {

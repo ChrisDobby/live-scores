@@ -1,0 +1,16 @@
+{
+  "name": "create-processors",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf ./lib && tsc",
+    "package": "mkdir -p ../dist && rm -f ../dist/create-scorecard.zip && npm run build && npm prune --production && zip -r ../dist/create-scorecard.zip lib/*.js node_modules/**/* -x *.test.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}

@@ -24,8 +24,8 @@ resource "aws_lambda_function" "create-processors" {
     variables = merge({
       PROCESSOR_PROFILE_ARN           = aws_iam_instance_profile.scorecard-processor-profile.arn
       PROCESSOR_SG_ID                 = aws_security_group.allow_ssh.id,
-      FIRST_TEAM_PROCESSOR_QUEUE_URL  = aws_sqs_queue.first-team-scorecard-html.arn,
-      SECOND_TEAM_PROCESSOR_QUEUE_URL = aws_sqs_queue.second-team-scorecard-html.arn,
+      FIRST_TEAM_PROCESSOR_QUEUE_URL  = aws_sqs_queue.first-team-scorecard-html.url,
+      SECOND_TEAM_PROCESSOR_QUEUE_URL = aws_sqs_queue.second-team-scorecard-html.url,
     }, {})
   }
 }
@@ -53,4 +53,34 @@ resource "aws_lambda_function" "teardown-processors" {
 
   runtime = "nodejs14.x"
   timeout = 10
+}
+
+resource "aws_lambda_function" "create-scorecard" {
+  function_name    = "create-scorecard"
+  handler          = "lib/index.handler"
+  filename         = "../functions/dist/create-scorecard.zip"
+  source_code_hash = filebase64sha256("../functions/dist/create-scorecard.zip")
+  role             = aws_iam_role.create-scorecard-role.arn
+
+  runtime = "nodejs14.x"
+  timeout = 10
+
+  environment {
+    variables = merge({
+      FIRST_TEAM_QUEUE_URL  = aws_sqs_queue.first-team-scorecard-html.url,
+      SECOND_TEAM_QUEUE_URL = aws_sqs_queue.second-team-scorecard-html.url,
+    }, {})
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "create-first-team-scorecard-sqs-source" {
+  event_source_arn = aws_sqs_queue.first-team-scorecard-html.arn
+  function_name    = aws_lambda_function.create-scorecard.function_name
+  batch_size       = 10
+}
+
+resource "aws_lambda_event_source_mapping" "create-second-team-scorecard-sqs-source" {
+  event_source_arn = aws_sqs_queue.second-team-scorecard-html.arn
+  function_name    = aws_lambda_function.create-scorecard.function_name
+  batch_size       = 10
 }
