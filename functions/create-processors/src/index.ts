@@ -20,8 +20,19 @@ npm run start`;
 
 const client = new EC2Client({ region: 'eu-west-2' });
 
+const getQueueUrl = (teamId: string) => {
+  switch (teamId) {
+    case '1':
+      return process.env.FIRST_TEAM_PROCESSOR_QUEUE_URL as string;
+    case '2':
+      return process.env.SECOND_TEAM_PROCESSOR_QUEUE_URL as string;
+    default:
+      return '';
+  }
+};
+
 const createInstance = (teamId: string, scorecardUrl: string) => {
-  const userData = `${USER_DATA} ${teamId} ${scorecardUrl}`;
+  const userData = `${USER_DATA} ${scorecardUrl} ${getQueueUrl(teamId)}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
