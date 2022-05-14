@@ -16,12 +16,12 @@ git checkout live-scores
 cd live-scores/scorecard-processor
 npm i
 npm run build
-npm run start:`;
+npm run start`;
 
 const client = new EC2Client({ region: 'eu-west-2' });
 
-const createInstance = (teamId: string) => {
-  const userData = `${USER_DATA}${teamId}`;
+const createInstance = (teamId: string, scorecardUrl: string) => {
+  const userData = `${USER_DATA} ${teamId} ${scorecardUrl}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
@@ -47,7 +47,7 @@ const getCreator = (teamId: string, field?: { S: string }) => {
     return null;
   }
 
-  return createInstance(teamId);
+  return createInstance(teamId, field.S);
 };
 
 const handleRecord = async ({

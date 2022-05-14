@@ -5,13 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./lib && tsc",
-    "start:1": "ts-node ./src/index.ts 1",
-    "start:2": "ts-node ./src/index.ts 2"
+    "start": "ts-node ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.85.0",
     "@aws-sdk/client-s3": "^3.78.0",
     "puppeteer": "^13.6.0"
   },
