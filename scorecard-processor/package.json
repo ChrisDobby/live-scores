@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.78.0",
+    "@aws-sdk/client-sqs": "^3.87.0",
     "puppeteer": "^13.6.0"
   },
   "devDependencies": {

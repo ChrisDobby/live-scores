@@ -53,44 +53,25 @@ resource "aws_iam_role" "scorecard-processor-role" {
   assume_role_policy = data.aws_iam_policy_document.ec2-assume-role.json
 }
 
-resource "aws_iam_policy" "scorecard-processor-dynamo" {
-  name   = "scorecard-processor-dynamo"
-  policy = data.aws_iam_policy_document.scorecard-processor-dynamo.json
+resource "aws_iam_policy" "scorecard-processor-sqs" {
+  name   = "scorecard-processor-sqs"
+  policy = data.aws_iam_policy_document.scorecard-processor-sqs.json
 }
 
-data "aws_iam_policy_document" "scorecard-processor-dynamo" {
+data "aws_iam_policy_document" "scorecard-processor-sqs" {
   statement {
-    actions = ["dynamodb:GetItem", "dynamodb:Query"]
+    actions = ["sqs:SendMessage"]
 
     resources = [
-      aws_dynamodb_table.live-score-urls.arn
+      aws_sqs_queue.first-team-scorecard-html.arn,
+      aws_sqs_queue.second-team-scorecard-html.arn
     ]
   }
 }
 
-resource "aws_iam_role_policy_attachment" "scorecard-processor-dynamo" {
+resource "aws_iam_role_policy_attachment" "scorecard-processor-sqs" {
   role       = aws_iam_role.scorecard-processor-role.name
-  policy_arn = aws_iam_policy.scorecard-processor-dynamo.arn
-}
-
-resource "aws_iam_policy" "scorecard-processor-s3" {
-  name   = "scorecard-processor-s3"
-  policy = data.aws_iam_policy_document.scorecard-processor-s3.json
-}
-
-data "aws_iam_policy_document" "scorecard-processor-s3" {
-  statement {
-    actions = ["s3:PutItem"]
-
-    resources = [
-      aws_s3_bucket.live-scores-html.arn
-    ]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "scorecard-processor-s3" {
-  role       = aws_iam_role.scorecard-processor-role.name
-  policy_arn = aws_iam_policy.scorecard-processor-s3.arn
+  policy_arn = aws_iam_policy.scorecard-processor-sqs.arn
 }
 
 resource "aws_iam_instance_profile" "scorecard-processor-profile" {
