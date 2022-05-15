@@ -1,13 +1,15 @@
 import puppeteer, { ElementHandle, Page } from 'puppeteer';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
+let page: Page | null = null;
+
 const sqsClient = new SQSClient({ region: 'eu-west-2' });
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const findScorecardTab = async (page: Page) => {
-  let scorecardTab: ElementHandle<Element> | null = null;
+const findScorecardTab = async () => {
+  let scorecardTab: ElementHandle<Element> | null | undefined = null;
   while (true) {
-    scorecardTab = await page.$('#nvScorecardTab-tab');
+    scorecardTab = await page?.$('#nvScorecardTab-tab');
     if (scorecardTab) {
       break;
     }
@@ -18,8 +20,8 @@ const findScorecardTab = async (page: Page) => {
   return scorecardTab;
 };
 
-const processScorecardHtml = (queueUrl: string, page: Page) => async () => {
-  const content = await page.$eval('#nvScorecardTab', (el) => el.innerHTML);
+const processScorecardHtml = (queueUrl: string) => async () => {
+  const content = await page?.$eval('#nvScorecardTab', (el) => el.innerHTML);
   console.log(content);
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
@@ -46,14 +48,14 @@ const processScorecardHtml = (queueUrl: string, page: Page) => async () => {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
-  const page = await browser.newPage();
+  page = await browser.newPage();
   await page.goto(scorecardUrl);
 
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
   await acceptButton.click();
 
-  await findScorecardTab(page);
+  await findScorecardTab();
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl, page), 300000);
+  setInterval(processScorecardHtml(queueUrl), 300000);
 })();
