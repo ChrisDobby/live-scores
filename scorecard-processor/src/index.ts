@@ -15,6 +15,7 @@ const findScorecardTab = async () => {
     }
     console.log('no live scorecard available, waiting to try again..');
     await sleep(300000);
+    await page?.reload({ waitUntil: 'networkidle0' });
   }
 
   return scorecardTab;
