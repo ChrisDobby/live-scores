@@ -189,6 +189,12 @@ resource "aws_iam_role" "create-scorecard-role" {
   name               = "create-scorecard"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
 }
+
+resource "aws_iam_role_policy_attachment" "create-scorecard-cloudwatch" {
+  role       = aws_iam_role.create-scorecard-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
 resource "aws_iam_policy" "create-scorecard-sqs" {
   name   = "create-scorecard-sqs"
   policy = data.aws_iam_policy_document.create-scorecard-sqs.json
