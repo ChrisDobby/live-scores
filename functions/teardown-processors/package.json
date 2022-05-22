@@ -1,19 +1,17 @@
 {
-  "name": "teardown-processors",
+  "name": "@cleckheaton-ccc-live-scores/teardown-processors",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rm -rf ./lib && tsc",
-    "package": "mkdir -p ../dist && rm -f ../dist/teardown-processors.zip && npm run build && npm prune --production && zip -r ../dist/teardown-processors.zip lib/*.js node_modules/**/* -x *.test.js"
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "package": "mkdir -p ../dist && rm -f ../dist/teardown-processors.zip && zip -r ../dist/teardown-processors.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.86.0"
-  },
-  "devDependencies": {
-    "typescript": "^4.6.4"
   }
 }

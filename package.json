@@ -1,0 +1,24 @@
+{
+  "name": "cleckheaton-ccc-live-scores",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build --filter=...[origin/main]",
+    "build:all": "turbo run build",
+    "types": "turbo run types --filter=...[origin/main]",
+    "types:all": "turbo run types",
+    "package": "turbo run package --filter=...[origin/main]",
+    "package:all": "turbo run package"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "esbuild": "^0.14.39",
+    "turbo": "^1.2.9",
+    "typescript": "^4.6.2"
+  },
+  "workspaces": [
+    "functions/*",
+    "scorecard-processor"
+  ]
+}
