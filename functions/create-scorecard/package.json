@@ -10,5 +10,9 @@
     "package": "mkdir -p ../dist && rm -f ../dist/create-scorecard.zip && zip -r ../dist/create-scorecard.zip lib/*.js"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.99.0",
+    "cheerio": "^1.0.0-rc.11"
+  }
 }

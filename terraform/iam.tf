@@ -219,3 +219,25 @@ resource "aws_iam_role_policy_attachment" "create-scorecard-sqs" {
   role       = aws_iam_role.create-scorecard-role.name
   policy_arn = aws_iam_policy.create-scorecard-sqs.arn
 }
+
+resource "aws_iam_policy" "create-scorecard-s3" {
+  name   = "create-scorecard-sqs"
+  policy = data.aws_iam_policy_document.create-scorecard-s3.json
+}
+
+data "aws_iam_policy_document" "create-scorecard-s3" {
+  statement {
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      aws_s3_bucket.scoecards.arn,
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "create-scorecard-s3" {
+  role       = aws_iam_role.create-scorecard-role.name
+  policy_arn = aws_iam_policy.create-scorecard-s3.arn
+}
