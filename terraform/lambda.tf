@@ -67,8 +67,9 @@ resource "aws_lambda_function" "create-scorecard" {
 
   environment {
     variables = merge({
-      FIRST_TEAM_QUEUE_URL  = aws_sqs_queue.first-team-scorecard-html.url,
-      SECOND_TEAM_QUEUE_URL = aws_sqs_queue.second-team-scorecard-html.url,
+      FIRST_TEAM_QUEUE_ARN  = aws_sqs_queue.first-team-scorecard-html.arn,
+      SECOND_TEAM_QUEUE_ARN = aws_sqs_queue.second-team-scorecard-html.arn,
+      SCORECARD_BUCKET_NAME = aws_s3_bucket.scorecards.bucket,
     }, {})
   }
 }
