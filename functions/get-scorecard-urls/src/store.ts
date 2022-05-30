@@ -1,10 +1,4 @@
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-  AttributeValue,
-  PutItemCommandOutput,
-} from '@aws-sdk/client-dynamodb';
+import { DynamoDB } from 'aws-sdk';
 
 const TableName = 'cleckheaton-cc-live-score-urls';
 
@@ -13,13 +7,15 @@ type ScorecardUrls = {
   secondTeam: string | null;
 };
 
-const dynamoClient = new DynamoDBClient({ region: 'eu-west-2' });
+const dynamoClient = new DynamoDB({ region: 'eu-west-2' });
 export const get = async (date: string): Promise<ScorecardUrls | null> => {
-  const getCommand = new GetItemCommand({
-    TableName,
-    Key: { date: { S: date } },
-  });
-  const { Item } = await dynamoClient.send(getCommand);
+  const { Item } = await dynamoClient
+    .getItem({
+      TableName,
+      Key: { date: { S: date } },
+    })
+    .promise();
+
   return Item
     ? {
         firstTeam: Item.firstTeam?.S ? Item.firstTeam.S : null,
@@ -31,8 +27,8 @@ export const get = async (date: string): Promise<ScorecardUrls | null> => {
 export const put = (
   date: string,
   { firstTeam, secondTeam }: ScorecardUrls
-): Promise<PutItemCommandOutput> => {
-  const dynamoItem: { [key: string]: AttributeValue } = {
+): Promise<DynamoDB.PutItemOutput> => {
+  const dynamoItem: { [key: string]: DynamoDB.AttributeValue } = {
     date: { S: date },
     expiry: { N: `${Math.floor(Date.now() / 1000) + 24 * 60 * 60}` },
   };
@@ -44,10 +40,10 @@ export const put = (
     dynamoItem.secondTeam = { S: secondTeam };
   }
 
-  const putCommand = new PutItemCommand({
-    TableName,
-    Item: dynamoItem,
-  });
-
-  return dynamoClient.send(putCommand);
+  return dynamoClient
+    .putItem({
+      TableName,
+      Item: dynamoItem,
+    })
+    .promise();
 };
