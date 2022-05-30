@@ -221,7 +221,7 @@ resource "aws_iam_role_policy_attachment" "create-scorecard-sqs" {
 }
 
 resource "aws_iam_policy" "create-scorecard-s3" {
-  name   = "create-scorecard-sqs"
+  name   = "create-scorecard-s3"
   policy = data.aws_iam_policy_document.create-scorecard-s3.json
 }
 
@@ -232,7 +232,7 @@ data "aws_iam_policy_document" "create-scorecard-s3" {
     ]
 
     resources = [
-      aws_s3_bucket.scoecards.arn,
+      aws_s3_bucket.scorecards.arn,
     ]
   }
 }
