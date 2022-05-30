@@ -5,14 +5,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "types": "tsc --noEmit --incremental",
-    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
-    "package": "mkdir -p ../dist && rm -f ../dist/get-scorecard-urls.zip && zip -r ../dist/get-scorecard-urls.zip lib/*.js"
+    "build": "rm -rf ./lib && tsc",
+    "package": "mkdir -p ../dist && rm -f ../dist/get-scorecard-urls.zip && npm run build && zip -r ../dist/get-scorecard-urls.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.85.0",
-    "chrome-aws-lambda": "^10.1.0"
+    "chrome-aws-lambda": "^10.1.0",
+    "puppeteer": "^13.6.0",
+    "puppeteer-core": "^10.1.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.1145.0"
   }
 }
