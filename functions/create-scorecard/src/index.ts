@@ -42,8 +42,8 @@ const {
 } = process.env;
 
 const keyName = {
-  [`${firstTeamQueueArn}`]: 'firstTeam.json',
-  [`${secondTeamQueueArn}`]: 'secondTeam.json',
+  [`${firstTeamQueueArn}`]: 'first-team.json',
+  [`${secondTeamQueueArn}`]: 'second-team.json',
 };
 
 const getBowlingFigures = ($, row) => {
@@ -166,7 +166,9 @@ const getScorecard = (scorecardHtml: string) => {
 };
 
 const processRecord = ({ body, eventSourceARN }) => {
-  const bucketKey = keyName[eventSourceARN];
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  const bucketKey = `${date.getTime()}-${keyName[eventSourceARN]}`;
   if (!bucketKey) {
     throw new Error('Unexpected eventSourceARN');
   }
