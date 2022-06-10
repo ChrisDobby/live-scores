@@ -1,0 +1,16 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/socket-connect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf ./lib && tsc",
+    "package": "mkdir -p ../dist && rm -f ../dist/socket-connect.zip && npm run build && zip -r ../dist/socket-connect.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.1145.0"
+  }
+}
