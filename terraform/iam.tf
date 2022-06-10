@@ -241,3 +241,33 @@ resource "aws_iam_role_policy_attachment" "create-scorecard-s3" {
   role       = aws_iam_role.create-scorecard-role.name
   policy_arn = aws_iam_policy.create-scorecard-s3.arn
 }
+
+resource "aws_iam_role" "socket-connect-role" {
+  name               = "socket-connect"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_policy" "socket-connect-dynamo" {
+  name   = "socket-connect-dynamo"
+  policy = data.aws_iam_policy_document.socket-connect-dynamo.json
+}
+
+data "aws_iam_policy_document" "socket-connect-dynamo" {
+  statement {
+    actions = ["dynamodb:PutItem"]
+
+    resources = [
+      aws_dynamodb_table.live-score-connections.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "socket-connect-dynamo" {
+  role       = aws_iam_role.socket-connect-role.name
+  policy_arn = aws_iam_policy.socket-connect-dynamo.arn
+}
+
+resource "aws_iam_role_policy_attachment" "socket-connect-cloudwatch" {
+  role       = aws_iam_role.socket-connect-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
