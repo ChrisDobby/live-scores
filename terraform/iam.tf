@@ -271,3 +271,32 @@ resource "aws_iam_role_policy_attachment" "socket-connect-cloudwatch" {
   role       = aws_iam_role.socket-connect-role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
+resource "aws_iam_role" "socket-disconnect-role" {
+  name               = "socket-disconnect"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_policy" "socket-disconnect-dynamo" {
+  name   = "socket-disconnect-dynamo"
+  policy = data.aws_iam_policy_document.socket-disconnect-dynamo.json
+}
+
+data "aws_iam_policy_document" "socket-disconnect-dynamo" {
+  statement {
+    actions = ["dynamodb:DeleteItem"]
+
+    resources = [
+      aws_dynamodb_table.live-score-connections.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "socket-disconnect-dynamo" {
+  role       = aws_iam_role.socket-disconnect-role.name
+  policy_arn = aws_iam_policy.socket-disconnect-dynamo.arn
+}
+
+resource "aws_iam_role_policy_attachment" "socket-disconnect-cloudwatch" {
+  role       = aws_iam_role.socket-disconnect-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
