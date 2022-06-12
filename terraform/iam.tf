@@ -229,6 +229,7 @@ data "aws_iam_policy_document" "create-scorecard-s3" {
   statement {
     actions = [
       "s3:PutObject",
+      "s3:PutObjectAcl",
     ]
 
     resources = [
