@@ -94,7 +94,7 @@ const getHowout = ($, event) => {
 }
 
 const getPlayerInnings = ($, playerInnings) => {
-  const name = $('.nvp-scorecard__batsmen', playerInnings).first().text()
+  const name = $('.nvp-scorecard__batsmen', playerInnings).first().text().trim()
   const runs = $('.nvp-scorecard__runs', playerInnings).first().text()
   const balls = $('.nvp-scorecard__balls', playerInnings).first().text()
   const minutes = $('.nvp-scorecard__mins', playerInnings).first().text()
