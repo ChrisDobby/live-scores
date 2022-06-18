@@ -4,7 +4,7 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 let page: Page | null = null;
 
 const sqsClient = new SQSClient({ region: 'eu-west-2' });
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const findScorecardTab = async () => {
   let scorecardTab: ElementHandle<Element> | null | undefined = null;
@@ -22,7 +22,7 @@ const findScorecardTab = async () => {
 };
 
 const processScorecardHtml = (queueUrl: string) => async () => {
-  const content = await page?.$eval('#nvScorecardTab', (el) => el.innerHTML);
+  const content = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
   console.log(content);
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
@@ -58,5 +58,5 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   await findScorecardTab();
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl), 300000);
+  setInterval(processScorecardHtml(queueUrl), 60000);
 })();
