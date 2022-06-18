@@ -135,10 +135,10 @@ const getBatting = ($, batting, team) => {
 };
 
 const getInnings = ($, innings, team) => {
-  const [battingTable, fowTable, bowlingTable] = $('.nvp-scorecard__table', innings);
+  const [battingTable, table2, table3] = $('.nvp-scorecard__table', innings);
   const batting = getBatting($, battingTable, team);
-  const fallOfWickets = getFallOfWickets($, fowTable);
-  const bowling = getBowling($, bowlingTable);
+  const fallOfWickets = getFallOfWickets($, table2);
+  const bowling = getBowling($, fallOfWickets ? table3 : table2);
 
   return { batting, fallOfWickets, bowling };
 };
