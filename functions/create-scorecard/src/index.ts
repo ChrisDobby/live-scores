@@ -148,7 +148,7 @@ const getTeamNames = $ => {
   const teamNames: string[] = [];
 
   for (const team of teams) {
-    teamNames.push(team.text().replace(' CC', '').trim());
+    teamNames.push($(team).text().replace(' CC', '').trim());
   }
 
   return teamNames;
