@@ -127,3 +127,22 @@ resource "aws_lambda_permission" "socket-disconnect" {
 
   source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/*/*"
 }
+
+resource "aws_lambda_function" "scorecard-updated" {
+  function_name    = "scorecard-updated"
+  handler          = "lib/index.handler"
+  filename         = "../functions/dist/scorecard-updated.zip"
+  source_code_hash = filebase64sha256("../functions/dist/scorecard-updated.zip")
+  role             = aws_iam_role.scorecard-updated-role.arn
+
+  runtime = "nodejs14.x"
+  timeout = 10
+}
+
+resource "aws_lambda_permission" "allow-scorecard-updated-bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.scorecard-updated.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.scorecards.arn
+}

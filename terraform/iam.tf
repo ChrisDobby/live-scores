@@ -301,3 +301,13 @@ resource "aws_iam_role_policy_attachment" "socket-disconnect-cloudwatch" {
   role       = aws_iam_role.socket-disconnect-role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
+
+resource "aws_iam_role" "scorecard-updated-role" {
+  name               = "scorecard-updated"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_role_policy_attachment" "scorecard-updated-cloudwatch" {
+  role       = aws_iam_role.scorecard-updated-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
