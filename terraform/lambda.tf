@@ -72,6 +72,7 @@ resource "aws_lambda_function" "create-scorecard" {
       FIRST_TEAM_QUEUE_ARN  = aws_sqs_queue.first-team-scorecard-html.arn,
       SECOND_TEAM_QUEUE_ARN = aws_sqs_queue.second-team-scorecard-html.arn,
       SCORECARD_BUCKET_NAME = aws_s3_bucket.scorecards.bucket,
+      UPDATE_SNS_TOPIC_ARN  = aws_sns_topic.scorecard-updated.arn,
     }, {})
   }
 }
@@ -126,23 +127,4 @@ resource "aws_lambda_permission" "socket-disconnect" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/*/*"
-}
-
-resource "aws_lambda_function" "scorecard-updated" {
-  function_name    = "scorecard-updated"
-  handler          = "lib/index.handler"
-  filename         = "../functions/dist/scorecard-updated.zip"
-  source_code_hash = filebase64sha256("../functions/dist/scorecard-updated.zip")
-  role             = aws_iam_role.scorecard-updated-role.arn
-
-  runtime = "nodejs14.x"
-  timeout = 10
-}
-
-resource "aws_lambda_permission" "allow-scorecard-updated-bucket" {
-  statement_id  = "AllowExecutionFromS3Bucket"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.scorecard-updated.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.scorecards.arn
 }

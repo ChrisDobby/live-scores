@@ -243,6 +243,20 @@ resource "aws_iam_role_policy_attachment" "create-scorecard-s3" {
   policy_arn = aws_iam_policy.create-scorecard-s3.arn
 }
 
+data "aws_iam_policy_document" "create-scorecard-sns" {
+  statement {
+    effect  = "Allow"
+    actions = ["sns:Publish"]
+
+    resources = [aws_sns_topic.scorecard-updated.arn]
+  }
+}
+
+resource "aws_iam_policy" "create-scorecard-sns" {
+  name   = "create-scorecard-sns"
+  policy = data.aws_iam_policy_document.create-scorecard-sns.json
+}
+
 resource "aws_iam_role" "socket-connect-role" {
   name               = "socket-connect"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
@@ -299,15 +313,5 @@ resource "aws_iam_role_policy_attachment" "socket-disconnect-dynamo" {
 
 resource "aws_iam_role_policy_attachment" "socket-disconnect-cloudwatch" {
   role       = aws_iam_role.socket-disconnect-role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-}
-
-resource "aws_iam_role" "scorecard-updated-role" {
-  name               = "scorecard-updated"
-  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
-}
-
-resource "aws_iam_role_policy_attachment" "scorecard-updated-cloudwatch" {
-  role       = aws_iam_role.scorecard-updated-role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }

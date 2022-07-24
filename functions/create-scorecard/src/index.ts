@@ -1,7 +1,9 @@
 import * as cheerio from 'cheerio';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 
 const s3Client = new S3Client({});
+const snsClient = new SNSClient({});
 
 type BowlingFigures = {
   name: string;
@@ -35,7 +37,7 @@ type Innings = {
   bowling: BowlingFigures[];
 };
 
-const { FIRST_TEAM_QUEUE_ARN: firstTeamQueueArn, SECOND_TEAM_QUEUE_ARN: secondTeamQueueArn, SCORECARD_BUCKET_NAME: bucketName } = process.env;
+const { FIRST_TEAM_QUEUE_ARN: firstTeamQueueArn, SECOND_TEAM_QUEUE_ARN: secondTeamQueueArn, SCORECARD_BUCKET_NAME: bucketName, UPDATE_SNS_TOPIC_ARN: snsTopicArn } = process.env;
 
 const keyName = {
   [`${firstTeamQueueArn}`]: 'first-team.json',
@@ -168,6 +170,28 @@ const getScorecard = (scorecardHtml: string) => {
   return matchInnings;
 };
 
+const putToS3 = (key: string, scorecard) => {
+  console.log(`writing to ${key}`);
+  const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    Body: JSON.stringify(scorecard),
+    ACL: 'public-read',
+  });
+
+  return s3Client.send(command);
+};
+
+const publishToSns = scorecard => {
+  console.log(`publising to ${snsTopicArn}`);
+  const command = new PublishCommand({
+    TopicArn: snsTopicArn,
+    Message: JSON.stringify(scorecard),
+  });
+
+  return snsClient.send(command);
+};
+
 const processRecord = ({ body, eventSourceARN }) => {
   const date = new Date();
   date.setHours(0, 0, 0, 0);
@@ -178,15 +202,16 @@ const processRecord = ({ body, eventSourceARN }) => {
 
   const scorecard = getScorecard(body);
   console.log(scorecard);
-  console.log(`writing to ${bucketKey}`);
+  return Promise.all([putToS3(bucketKey, scorecard), publishToSns(scorecard)]);
+  // console.log(`writing to ${bucketKey}`);
 
-  const command = new PutObjectCommand({
-    Bucket: bucketName,
-    Key: bucketKey,
-    Body: JSON.stringify(scorecard),
-    ACL: 'public-read',
-  });
-  return s3Client.send(command);
+  // const command = new PutObjectCommand({
+  //   Bucket: bucketName,
+  //   Key: bucketKey,
+  //   Body: JSON.stringify(scorecard),
+  //   ACL: 'public-read',
+  // });
+  // return s3Client.send(command);
 };
 
 export const handler = async ({ Records }) => {
