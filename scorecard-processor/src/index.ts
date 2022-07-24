@@ -21,19 +21,23 @@ const findScorecardTab = async () => {
   return scorecardTab;
 };
 
-let lastContent = '';
+let lastScorecard: string | undefined = '';
+let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
-  const content = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
-  console.log(content);
-  if (lastContent !== content) {
+  const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
+  const headerHtml = await page?.$eval('.container.main-header', el => el.innerHTML);
+  console.log(scorecardHtml);
+  console.log(headerHtml);
+  if (lastScorecard === scorecardHtml && lastHeader === headerHtml) {
     console.log('has not been updated...');
     return;
   }
 
-  lastContent = content;
+  lastScorecard = scorecardHtml;
+  lastHeader = headerHtml;
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
-    MessageBody: content,
+    MessageBody: JSON.stringify({ headerHtml, scorecardHtml }),
   });
   console.log('sending to sqs');
   await sqsClient.send(command);
