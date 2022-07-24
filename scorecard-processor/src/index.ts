@@ -66,8 +66,8 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
   await acceptButton.click();
 
-  await findScorecardTab();
-  page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
+  // await findScorecardTab();
+  // page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
   setInterval(processScorecardHtml(queueUrl), 60000);
 })();
