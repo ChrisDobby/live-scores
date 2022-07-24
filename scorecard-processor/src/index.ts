@@ -21,9 +21,16 @@ const findScorecardTab = async () => {
   return scorecardTab;
 };
 
+let lastContent = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
   const content = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
   console.log(content);
+  if (lastContent !== content) {
+    console.log('has not been updated...');
+    return;
+  }
+
+  lastContent = content;
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
     MessageBody: content,
