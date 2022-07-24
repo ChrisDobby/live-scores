@@ -243,6 +243,12 @@ resource "aws_iam_role_policy_attachment" "create-scorecard-s3" {
   policy_arn = aws_iam_policy.create-scorecard-s3.arn
 }
 
+
+resource "aws_iam_policy" "create-scorecard-sns" {
+  name   = "create-scorecard-sns"
+  policy = data.aws_iam_policy_document.create-scorecard-sns.json
+}
+
 data "aws_iam_policy_document" "create-scorecard-sns" {
   statement {
     effect  = "Allow"
@@ -252,9 +258,9 @@ data "aws_iam_policy_document" "create-scorecard-sns" {
   }
 }
 
-resource "aws_iam_policy" "create-scorecard-sns" {
-  name   = "create-scorecard-sns"
-  policy = data.aws_iam_policy_document.create-scorecard-sns.json
+resource "aws_iam_role_policy_attachment" "create-scorecard-sns" {
+  role       = aws_iam_role.create-scorecard-role.name
+  policy_arn = aws_iam_policy.create-scorecard-sns.arn
 }
 
 resource "aws_iam_role" "socket-connect-role" {
@@ -314,4 +320,37 @@ resource "aws_iam_role_policy_attachment" "socket-disconnect-dynamo" {
 resource "aws_iam_role_policy_attachment" "socket-disconnect-cloudwatch" {
   role       = aws_iam_role.socket-disconnect-role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_role" "update-bucket-role" {
+  name               = "update-bucket"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_role_policy_attachment" "update-bucket-cloudwatch" {
+  role       = aws_iam_role.update-bucket-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_policy" "update-bucket-s3" {
+  name   = "update-bucket-s3"
+  policy = data.aws_iam_policy_document.update-bucket-s3.json
+}
+
+data "aws_iam_policy_document" "update-bucket-s3" {
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:PutObjectAcl",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.scorecards.arn}/*",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "update-bucket-s3" {
+  role       = aws_iam_role.update-bucket-role.name
+  policy_arn = aws_iam_policy.update-bucket-s3.arn
 }

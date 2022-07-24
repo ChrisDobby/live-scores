@@ -71,7 +71,6 @@ resource "aws_lambda_function" "create-scorecard" {
     variables = merge({
       FIRST_TEAM_QUEUE_ARN  = aws_sqs_queue.first-team-scorecard-html.arn,
       SECOND_TEAM_QUEUE_ARN = aws_sqs_queue.second-team-scorecard-html.arn,
-      SCORECARD_BUCKET_NAME = aws_s3_bucket.scorecards.bucket,
       UPDATE_SNS_TOPIC_ARN  = aws_sns_topic.scorecard-updated.arn,
     }, {})
   }
@@ -127,4 +126,30 @@ resource "aws_lambda_permission" "socket-disconnect" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/*/*"
+}
+
+
+resource "aws_lambda_function" "update-bucket" {
+  function_name    = "update-bucket"
+  handler          = "lib/index.handler"
+  filename         = "../functions/dist/update-bucket.zip"
+  source_code_hash = filebase64sha256("../functions/dist/update-bucket.zip")
+  role             = aws_iam_role.update-bucket-role.arn
+
+  runtime = "nodejs14.x"
+  timeout = 10
+
+  environment {
+    variables = merge({
+      SCORECARD_BUCKET_NAME = aws_s3_bucket.scorecards.bucket,
+    }, {})
+  }
+}
+
+resource "aws_lambda_permission" "update-bucket" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.update-bucket.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = aws_sns_topic.scorecard-updated.arn
 }

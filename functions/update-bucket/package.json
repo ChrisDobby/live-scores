@@ -1,0 +1,17 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/update-bucket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "package": "mkdir -p ../dist && rm -f ../dist/update-bucket.zip && zip -r ../dist/update-bucket.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.99.0"
+  }
+}
