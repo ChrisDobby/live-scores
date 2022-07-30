@@ -1,8 +1,4 @@
-import {
-  EC2Client,
-  RunInstancesCommand,
-  RunInstancesCommandOutput,
-} from '@aws-sdk/client-ec2';
+import { EC2Client, RunInstancesCommand, RunInstancesCommandOutput } from '@aws-sdk/client-ec2';
 
 const USER_DATA = `#!/bin/bash
 yum update -y
@@ -12,7 +8,7 @@ curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 yum install -y nodejs
 git clone https://github.com/ChrisDobby/cleckheaton-cc.git
 cd cleckheaton-cc
-git checkout live-scores
+git checkout game-over-update
 cd live-scores/scorecard-processor
 npm i
 npm run build
@@ -61,19 +57,14 @@ const getCreator = (teamId: string, field?: { S: string }) => {
   return createInstance(teamId, field.S);
 };
 
-const handleRecord = async ({
-  dynamodb: { NewImage },
-}): Promise<(RunInstancesCommandOutput | null)[]> => {
+const handleRecord = async ({ dynamodb: { NewImage } }): Promise<(RunInstancesCommandOutput | null)[]> => {
   if (!NewImage) {
     return [];
   }
 
   console.log(JSON.stringify(NewImage, null, 2));
   const { firstTeam, secondTeam } = NewImage;
-  const creators = [
-    getCreator('1', firstTeam),
-    getCreator('2', secondTeam),
-  ].filter(Boolean);
+  const creators = [getCreator('1', firstTeam), getCreator('2', secondTeam)].filter(Boolean);
 
   return Promise.all(creators);
 };

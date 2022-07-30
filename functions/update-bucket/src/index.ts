@@ -11,6 +11,10 @@ const keyName = {
 
 const putToS3 = scorecard => {
   console.log(scorecard);
+  if (!scorecard.innings || !scorecard.innings.length) {
+    return;
+  }
+
   const keySuffix = keyName[scorecard.teamName];
   if (!keySuffix) {
     throw new Error(`Unexpected teamName: ${scorecard.teamName}`);

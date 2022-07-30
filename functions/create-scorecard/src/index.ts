@@ -35,12 +35,13 @@ type Innings = {
   bowling: BowlingFigures[];
 };
 
-const { FIRST_TEAM_QUEUE_ARN: firstTeamQueueArn, SECOND_TEAM_QUEUE_ARN: secondTeamQueueArn, UPDATE_SNS_TOPIC_ARN: snsTopicArn } = process.env;
-
-const keyName = {
-  [`${firstTeamQueueArn}`]: 'first-team.json',
-  [`${secondTeamQueueArn}`]: 'second-team.json',
+type Scorecard = {
+  teamName: string;
+  result: string | null;
+  innings: Innings[];
 };
+
+const { FIRST_TEAM_QUEUE_ARN: firstTeamQueueArn, SECOND_TEAM_QUEUE_ARN: secondTeamQueueArn, UPDATE_SNS_TOPIC_ARN: snsTopicArn } = process.env;
 
 const teamName = {
   [`${firstTeamQueueArn}`]: 'firstTeam',
@@ -159,18 +160,34 @@ const getTeamNames = $ => {
   return teamNames;
 };
 
-const getScorecard = (scorecardHtml: string) => {
+const getResult = (headerHtml: string) => {
+  try {
+    const $ = cheerio.load(headerHtml);
+    const matchStatus = $('.match-status').first().text().trim();
+    if (!matchStatus || matchStatus === 'IN PROGRESS') {
+      return null;
+    }
+
+    const winningTeam = $('.match-status').first().parent().children().first().text().trim();
+    return `${winningTeam || ''} ${matchStatus}`.trim();
+  } catch (ex) {
+    console.log(ex);
+    return null;
+  }
+};
+
+const getScorecard = (scorecardHtml: string, headerHtml: string, eventSourceARN: string): Scorecard => {
   const $ = cheerio.load(scorecardHtml);
 
   const teamNames = getTeamNames($);
-  const matchInnings: Innings[] = [];
+  const innings: Innings[] = [];
 
   const inningsDocuments = $('.nvp-innings__tab-content');
   for (const inningsDocument of inningsDocuments) {
-    matchInnings.push(getInnings($, inningsDocument, teamNames[matchInnings.length] || ''));
+    innings.push(getInnings($, inningsDocument, teamNames[innings.length] || ''));
   }
 
-  return matchInnings;
+  return { teamName: teamName[eventSourceARN], result: getResult(headerHtml), innings };
 };
 
 const publishToSns = scorecard => {
@@ -184,9 +201,10 @@ const publishToSns = scorecard => {
 };
 
 const processRecord = ({ body, eventSourceARN }) => {
-  const scorecard = getScorecard(body);
+  const { scorecardHtml, headerHtml } = JSON.parse(body);
+  const scorecard = getScorecard(scorecardHtml, headerHtml, eventSourceARN);
   console.log(scorecard);
-  return publishToSns({ innings: scorecard, teamName: teamName[eventSourceARN] });
+  return publishToSns(scorecard);
 };
 
 export const handler = async ({ Records }) => {
