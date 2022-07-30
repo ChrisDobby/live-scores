@@ -26,8 +26,6 @@ let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
   const headerHtml = await page?.$eval('.container.main-header', el => el.innerHTML);
-  console.log(scorecardHtml);
-  console.log(headerHtml);
   if (lastScorecard === scorecardHtml && lastHeader === headerHtml) {
     console.log('has not been updated...');
     return;
@@ -66,8 +64,8 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
   await acceptButton.click();
 
-  // await findScorecardTab();
-  // page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
+  await findScorecardTab();
+  page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
   setInterval(processScorecardHtml(queueUrl), 60000);
 })();
