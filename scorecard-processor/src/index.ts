@@ -1,10 +1,19 @@
 import puppeteer, { ElementHandle, Page } from 'puppeteer';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
+const oneHourMilliseconds = 60 * 60 * 1000;
+
 let page: Page | null = null;
 
 const sqsClient = new SQSClient({ region: 'eu-west-2' });
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+let lastRefresh = 0;
+const refreshPage = async () => {
+  console.log('refreshing page');
+  await page?.reload({ waitUntil: 'networkidle0' });
+  lastRefresh = Date.now();
+};
 
 const findScorecardTab = async () => {
   let scorecardTab: ElementHandle<Element> | null | undefined = null;
@@ -15,7 +24,7 @@ const findScorecardTab = async () => {
     }
     console.log('no live scorecard available, waiting to try again..');
     await sleep(300000);
-    await page?.reload({ waitUntil: 'networkidle0' });
+    await refreshPage();
   }
 
   return scorecardTab;
@@ -24,6 +33,10 @@ const findScorecardTab = async () => {
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
+  if (lastRefresh - Date.now() > oneHourMilliseconds) {
+    await refreshPage();
+  }
+
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
   const headerHtml = await page?.$eval('.container.main-header', el => el.innerHTML);
   if (lastScorecard === scorecardHtml && lastHeader === headerHtml) {
