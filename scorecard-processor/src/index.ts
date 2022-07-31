@@ -40,7 +40,11 @@ let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
   if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
-    await refreshAndGotoScorecard();
+    console.log('need to refresh');
+    console.log(Date.now());
+    console.log(lastRefresh);
+    console.log(Date.now() - lastRefresh);
+    // await refreshAndGotoScorecard();
   }
 
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
