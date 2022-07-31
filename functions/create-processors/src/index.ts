@@ -41,7 +41,10 @@ const createInstance = (teamId: string, scorecardUrl: string) => {
     TagSpecifications: [
       {
         ResourceType: 'instance',
-        Tags: [{ Key: 'Owner', Value: 'cleckheaton-cc' }],
+        Tags: [
+          { Key: 'Owner', Value: 'cleckheaton-cc' },
+          { Key: 'Team', Value: teamId },
+        ],
       },
     ],
   });
