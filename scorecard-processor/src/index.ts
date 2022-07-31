@@ -16,6 +16,7 @@ const refreshPage = async () => {
 };
 
 const refreshAndGotoScorecard = async () => {
+  console.log('refreshAndGotoScorecard');
   await refreshPage();
   const scorecardTab = await page?.$('#nvScorecardTab-tab');
   scorecardTab?.click();
@@ -44,7 +45,7 @@ const processScorecardHtml = (queueUrl: string) => async () => {
     console.log(Date.now());
     console.log(lastRefresh);
     console.log(Date.now() - lastRefresh);
-    // await refreshAndGotoScorecard();
+    await refreshAndGotoScorecard();
   }
 
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
