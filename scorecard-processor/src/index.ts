@@ -15,6 +15,12 @@ const refreshPage = async () => {
   lastRefresh = Date.now();
 };
 
+const refreshAndGotoScorecard = async () => {
+  await refreshPage();
+  const scorecardTab = await page?.$('#nvScorecardTab-tab');
+  scorecardTab?.click();
+};
+
 const findScorecardTab = async () => {
   let scorecardTab: ElementHandle<Element> | null | undefined = null;
   while (true) {
@@ -34,8 +40,7 @@ let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
   if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
-    await refreshPage();
-    page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
+    await refreshAndGotoScorecard();
   }
 
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
