@@ -73,6 +73,7 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   });
   page = await browser.newPage();
   await page.goto(scorecardUrl);
+  lastRefresh = Date.now();
 
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
   await acceptButton.click();
