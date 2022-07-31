@@ -33,8 +33,9 @@ const findScorecardTab = async () => {
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string) => async () => {
-  if (lastRefresh - Date.now() > oneHourMilliseconds) {
+  if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
     await refreshPage();
+    page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
   }
 
   const scorecardHtml = await page?.$eval('#nvScorecardTab', el => el.innerHTML);
