@@ -190,3 +190,28 @@ resource "aws_lambda_permission" "update-processors" {
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.scorecard-updated.arn
 }
+
+resource "aws_lambda_function" "update-sanity" {
+  function_name    = "update-sanity"
+  handler          = "lib/index.handler"
+  filename         = "../functions/dist/update-sanity.zip"
+  source_code_hash = filebase64sha256("../functions/dist/update-sanity.zip")
+  role             = aws_iam_role.update-sanity-role.arn
+
+  runtime = "nodejs14.x"
+  timeout = 10
+
+  environment {
+    variables = merge({
+      SANITY_AUTH_TOKEN = var.SANITY_AUTH_TOKEN,
+    }, {})
+  }
+}
+
+resource "aws_lambda_permission" "update-sanity" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.update-sanity.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = aws_sns_topic.scorecard-updated.arn
+}
