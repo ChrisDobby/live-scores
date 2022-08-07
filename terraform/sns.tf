@@ -13,3 +13,9 @@ resource "aws_sns_topic_subscription" "scorecard-updated-game-over" {
   protocol  = "lambda"
   endpoint  = aws_lambda_function.game-over.arn
 }
+
+resource "aws_sns_topic_subscription" "scorecard-updated-update-processors" {
+  topic_arn = aws_sns_topic.scorecard-updated.arn
+  protocol  = "lambda"
+  endpoint  = aws_lambda_function.update-processors.arn
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/update-processors",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "package": "mkdir -p ../dist && rm -f ../dist/update-processors.zip && zip -r ../dist/update-processors.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.86.0"
+  }
+}
