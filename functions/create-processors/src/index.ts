@@ -8,7 +8,6 @@ curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 yum install -y nodejs
 git clone https://github.com/ChrisDobby/cleckheaton-cc.git
 cd cleckheaton-cc
-git checkout game-over-update
 cd live-scores/scorecard-processor
 npm i
 npm run build
