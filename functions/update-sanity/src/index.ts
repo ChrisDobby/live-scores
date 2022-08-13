@@ -4,7 +4,7 @@ import { get } from './store';
 
 const sanityClient = sanity({ token: process.env.SANITY_AUTH_TOKEN, apiVersion: '2021-03-25', dataset: 'production', projectId: 'dq0grzvl', useCdn: false });
 
-const updateGameOver = (fixture, result, scorecard) => sanityClient.patch(fixture._id).set({ result, scorecard }).commit();
+const updateGameOver = (fixture, result, scorecard) => sanityClient.patch(fixture).set({ result, scorecard }).commit();
 
 const sanityTeamName = {
   firstTeam: '1st',
