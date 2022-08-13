@@ -153,25 +153,6 @@ resource "aws_lambda_permission" "update-bucket" {
   source_arn    = aws_sns_topic.scorecard-updated.arn
 }
 
-resource "aws_lambda_function" "game-over" {
-  function_name    = "game-over"
-  handler          = "lib/index.handler"
-  filename         = "../functions/dist/game-over.zip"
-  source_code_hash = filebase64sha256("../functions/dist/game-over.zip")
-  role             = aws_iam_role.game-over-role.arn
-
-  runtime = "nodejs14.x"
-  timeout = 10
-}
-
-resource "aws_lambda_permission" "game-over" {
-  statement_id  = "AllowExecutionFromSNS"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.game-over.function_name
-  principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.scorecard-updated.arn
-}
-
 resource "aws_lambda_function" "update-processors" {
   function_name    = "update-processors"
   handler          = "lib/index.handler"

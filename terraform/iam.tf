@@ -355,17 +355,6 @@ resource "aws_iam_role_policy_attachment" "update-bucket-s3" {
   policy_arn = aws_iam_policy.update-bucket-s3.arn
 }
 
-
-resource "aws_iam_role" "game-over-role" {
-  name               = "game-over"
-  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
-}
-
-resource "aws_iam_role_policy_attachment" "game-over-cloudwatch" {
-  role       = aws_iam_role.game-over-role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-}
-
 resource "aws_iam_role" "update-processors-role" {
   name               = "update-processors"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
