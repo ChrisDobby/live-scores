@@ -105,7 +105,7 @@ resource "aws_lambda_permission" "socket-connect" {
   function_name = aws_lambda_function.socket-connect.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/*/*"
+  source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/$connect"
 }
 
 resource "aws_lambda_function" "socket-disconnect" {
@@ -125,7 +125,7 @@ resource "aws_lambda_permission" "socket-disconnect" {
   function_name = aws_lambda_function.socket-disconnect.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/*/*"
+  source_arn = "${aws_apigatewayv2_api.live-scores.execution_arn}/*/$disconnect"
 }
 
 resource "aws_lambda_function" "update-bucket" {

@@ -292,6 +292,7 @@ resource "aws_iam_role_policy_attachment" "socket-connect-cloudwatch" {
   role       = aws_iam_role.socket-connect-role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
+
 resource "aws_iam_role" "socket-disconnect-role" {
   name               = "socket-disconnect"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
