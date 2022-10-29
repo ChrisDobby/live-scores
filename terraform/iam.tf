@@ -413,3 +413,53 @@ resource "aws_iam_role_policy_attachment" "update-sanity-dynamo" {
   role       = aws_iam_role.update-sanity-role.name
   policy_arn = aws_iam_policy.update-sanity-dynamo.arn
 }
+
+resource "aws_iam_role" "update-sockets-role" {
+  name               = "update-sockets"
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+}
+
+resource "aws_iam_role_policy_attachment" "update-sockets-cloudwatch" {
+  role       = aws_iam_role.update-sockets-role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
+resource "aws_iam_policy" "update-sockets-dynamo" {
+  name   = "update-sockets-dynamo"
+  policy = data.aws_iam_policy_document.update-sockets-dynamo.json
+}
+
+data "aws_iam_policy_document" "update-sockets-dynamo" {
+  statement {
+    actions = ["dynamodb:FullTableScan"]
+
+    resources = [
+      aws_dynamodb_table.live-score-connections.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "update-sockets-dynamo" {
+  role       = aws_iam_role.update-sockets-role.name
+  policy_arn = aws_iam_policy.update-sockets-dynamo.arn
+}
+
+resource "aws_iam_policy" "update-sockets-api" {
+  name   = "update-sockets-api"
+  policy = data.aws_iam_policy_document.update-sockets-api.json
+}
+
+data "aws_iam_policy_document" "update-sockets-api" {
+  statement {
+    actions = ["execute-api:Invoke"]
+
+    resources = [
+      aws_apigatewayv2_api.live-score-api.execution_arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "update-sockets-api" {
+  role       = aws_iam_role.update-sockets-role.name
+  policy_arn = aws_iam_policy.update-sockets-api.arn
+}

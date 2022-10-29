@@ -1,0 +1,18 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/update-sockets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "package": "mkdir -p ../dist && rm -f ../dist/update-sockets.zip && zip -r ../dist/update-sockets.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.181.0",
+    "@aws-sdk/client-dynamodb": "^3.181.0"
+  }
+}
