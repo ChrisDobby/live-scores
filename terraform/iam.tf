@@ -431,7 +431,7 @@ resource "aws_iam_policy" "update-sockets-dynamo" {
 
 data "aws_iam_policy_document" "update-sockets-dynamo" {
   statement {
-    actions = ["dynamodb:FullTableScan"]
+    actions = ["dynamodb:Scan"]
 
     resources = [
       aws_dynamodb_table.live-score-connections.arn
@@ -454,7 +454,7 @@ data "aws_iam_policy_document" "update-sockets-api" {
     actions = ["execute-api:Invoke"]
 
     resources = [
-      aws_apigatewayv2_api.live-score-api.execution_arn
+      aws_apigatewayv2_api.live-scores.execution_arn
     ]
   }
 }

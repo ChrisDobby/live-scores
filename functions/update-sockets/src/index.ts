@@ -9,7 +9,7 @@ const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2'
 const sendScorecard = scorecard => async connectionId => {
   const command = new PostToConnectionCommand({
     ConnectionId: connectionId,
-    Data: scorecard,
+    Data: Buffer.from(JSON.stringify(scorecard)),
   });
 
   return apiGatewayClient.send(command);
