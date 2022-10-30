@@ -451,10 +451,10 @@ resource "aws_iam_policy" "update-sockets-api" {
 
 data "aws_iam_policy_document" "update-sockets-api" {
   statement {
-    actions = ["execute-api:Invoke"]
+    actions = ["execute-api:Invoke", "execute-api:ManageConnections"]
 
     resources = [
-      aws_apigatewayv2_api.live-scores.execution_arn
+      "${aws_apigatewayv2_api.live-scores.execution_arn}/${aws_apigatewayv2_stage.live-scores-prod.name}/POST/@connections/{connectionId}"
     ]
   }
 }

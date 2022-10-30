@@ -209,7 +209,7 @@ resource "aws_lambda_function" "update-sockets" {
 
   environment {
     variables = merge({
-      SOCKET_ENDPOINT = aws_apigatewayv2_stage.live-scores-prod.invoke_url,
+      SOCKET_ENDPOINT = replace(aws_apigatewayv2_stage.live-scores-prod.invoke_url, "wss://", "https://")
     }, {})
   }
 }

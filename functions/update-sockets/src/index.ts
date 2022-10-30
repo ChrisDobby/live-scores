@@ -4,7 +4,7 @@ import { ApiGatewayManagementApiClient, PostToConnectionCommand } from '@aws-sdk
 const dynamoClient = new DynamoDBClient({ region: 'eu-west-2' });
 const TableName = 'cleckheaton-cc-live-score-connections';
 
-const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2', endpoint: `${process.env.SOCKET_ENDPOINT}/$connections` });
+const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2', endpoint: `${process.env.SOCKET_ENDPOINT}` });
 
 const sendScorecard = scorecard => async connectionId => {
   const command = new PostToConnectionCommand({
