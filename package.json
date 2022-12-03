@@ -19,6 +19,7 @@
   },
   "workspaces": [
     "functions/*",
+    "libs/*",
     "scorecard-processor"
   ]
 }

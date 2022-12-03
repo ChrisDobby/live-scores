@@ -1,4 +1,5 @@
 import { EC2Client, DescribeInstancesCommand, TerminateInstancesCommand } from '@aws-sdk/client-ec2';
+import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const ec2Client = new EC2Client([]);
 
@@ -7,7 +8,8 @@ const teamTags = {
   secondTeam: '2',
 };
 
-const updateProcessor = async scorecard => {
+const updateProcessor = async (scorecardMessage: unknown) => {
+  const scorecard = validateScorecard(scorecardMessage);
   if (!scorecard.result || !scorecard.teamName) {
     return;
   }

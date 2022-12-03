@@ -1,12 +1,13 @@
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { ApiGatewayManagementApiClient, PostToConnectionCommand } from '@aws-sdk/client-apigatewaymanagementapi';
+import { Scorecard, validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const dynamoClient = new DynamoDBClient({ region: 'eu-west-2' });
 const TableName = 'cleckheaton-cc-live-score-connections';
 
 const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2', endpoint: `${process.env.SOCKET_ENDPOINT}` });
 
-const sendScorecard = scorecard => async connectionId => {
+const sendScorecard = (scorecard: Scorecard) => async connectionId => {
   const command = new PostToConnectionCommand({
     ConnectionId: connectionId,
     Data: Buffer.from(JSON.stringify(scorecard)),
@@ -15,7 +16,8 @@ const sendScorecard = scorecard => async connectionId => {
   return apiGatewayClient.send(command);
 };
 
-const sendToSockets = async scorecard => {
+const sendToSockets = async (scorecardMessage: unknown) => {
+  const scorecard = validateScorecard(scorecardMessage);
   console.log(scorecard);
   if (!scorecard.innings || !scorecard.innings.length) {
     return;

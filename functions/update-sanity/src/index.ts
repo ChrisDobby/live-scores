@@ -1,5 +1,6 @@
 import sanity from '@sanity/client';
 import { format, add } from 'date-fns';
+import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 import { get } from './store';
 
 const sanityClient = sanity({ token: process.env.SANITY_AUTH_TOKEN, apiVersion: '2021-03-25', dataset: 'production', projectId: 'dq0grzvl', useCdn: false });
@@ -11,7 +12,8 @@ const sanityTeamName = {
   secondTeam: '2nd',
 };
 
-const updateSanity = async scorecard => {
+const updateSanity = async (scorecardMessage: unknown) => {
+  const scorecard = validateScorecard(scorecardMessage);
   if (!scorecard.result || !scorecard.teamName) {
     console.log('missing result or teamName', scorecard);
     return;

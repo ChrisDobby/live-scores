@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const s3Client = new S3Client({});
 
@@ -9,7 +10,8 @@ const keyName = {
   secondTeam: 'second-team.json',
 };
 
-const putToS3 = scorecard => {
+const putToS3 = (scorecardMessage: unknown) => {
+  const scorecard = validateScorecard(scorecardMessage);
   console.log(scorecard);
   if (!scorecard.innings || !scorecard.innings.length) {
     return;
