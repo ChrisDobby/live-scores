@@ -1,19 +1,22 @@
-import { DynamoDB } from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 
-const dynamoClient = new DynamoDB({ region: 'eu-west-2' });
+const client = new DynamoDBClient({});
+const documentClient = DynamoDBDocumentClient.from(client);
+
 const TableName = 'cleckheaton-cc-live-score-connections';
 
 export const handler = async event => {
   const { connectionId } = event.requestContext;
-  await dynamoClient
-    .putItem({
+  await documentClient.send(
+    new PutCommand({
       TableName,
       Item: {
-        connectionId: { S: connectionId },
-        expiry: { N: `${Math.floor(Date.now() / 1000) + 24 * 60 * 60}` },
+        connectionId,
+        expiry: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
       },
-    })
-    .promise();
+    }),
+  );
 
   return { statusCode: 200 };
 };

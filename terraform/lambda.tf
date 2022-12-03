@@ -5,7 +5,7 @@ resource "aws_lambda_function" "get-scorecard-urls" {
   source_code_hash = filebase64sha256("../functions/dist/get-scorecard-urls.zip")
   role             = aws_iam_role.get-scorecard-urls-role.arn
 
-  runtime     = "nodejs14.x"
+  runtime     = "nodejs18.x"
   timeout     = 600
   memory_size = 256
 
@@ -19,7 +19,7 @@ resource "aws_lambda_function" "create-processors" {
   source_code_hash = filebase64sha256("../functions/dist/create-processors.zip")
   role             = aws_iam_role.create-processors-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 
   environment {
@@ -53,7 +53,7 @@ resource "aws_lambda_function" "teardown-processors" {
   source_code_hash = filebase64sha256("../functions/dist/teardown-processors.zip")
   role             = aws_iam_role.teardown-processors-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 }
 
@@ -64,7 +64,7 @@ resource "aws_lambda_function" "create-scorecard" {
   source_code_hash = filebase64sha256("../functions/dist/create-scorecard.zip")
   role             = aws_iam_role.create-scorecard-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 
   environment {
@@ -95,7 +95,7 @@ resource "aws_lambda_function" "socket-connect" {
   source_code_hash = filebase64sha256("../functions/dist/socket-connect.zip")
   role             = aws_iam_role.socket-connect-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 }
 
@@ -115,7 +115,7 @@ resource "aws_lambda_function" "socket-disconnect" {
   source_code_hash = filebase64sha256("../functions/dist/socket-disconnect.zip")
   role             = aws_iam_role.socket-disconnect-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 }
 
@@ -135,7 +135,7 @@ resource "aws_lambda_function" "update-bucket" {
   source_code_hash = filebase64sha256("../functions/dist/update-bucket.zip")
   role             = aws_iam_role.update-bucket-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 
   environment {
@@ -160,7 +160,7 @@ resource "aws_lambda_function" "update-processors" {
   source_code_hash = filebase64sha256("../functions/dist/update-processors.zip")
   role             = aws_iam_role.update-processors-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 }
 
@@ -179,7 +179,7 @@ resource "aws_lambda_function" "update-sanity" {
   source_code_hash = filebase64sha256("../functions/dist/update-sanity.zip")
   role             = aws_iam_role.update-sanity-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 10
 
   environment {
@@ -204,7 +204,7 @@ resource "aws_lambda_function" "update-sockets" {
   source_code_hash = filebase64sha256("../functions/dist/update-sockets.zip")
   role             = aws_iam_role.update-sockets-role.arn
 
-  runtime = "nodejs14.x"
+  runtime = "nodejs18.x"
   timeout = 30
 
   environment {

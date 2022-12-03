@@ -1,4 +1,8 @@
-import { DynamoDB } from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+
+const client = new DynamoDBClient({});
+const documentClient = DynamoDBDocumentClient.from(client);
 
 const TableName = 'cleckheaton-cc-live-score-urls';
 
@@ -7,19 +11,18 @@ type ScorecardUrls = {
   secondTeam: string | null;
 };
 
-const dynamoClient = new DynamoDB({ region: 'eu-west-2' });
 export const get = async (date: string): Promise<ScorecardUrls | null> => {
-  const { Item } = await dynamoClient
-    .getItem({
+  const { Item } = await documentClient.send(
+    new GetCommand({
       TableName,
-      Key: { date: { S: date } },
-    })
-    .promise();
+      Key: { date },
+    }),
+  );
 
   return Item
     ? {
-        firstTeam: Item.firstTeam?.S ? Item.firstTeam.S : null,
-        secondTeam: Item.secondTeam?.S ? Item.secondTeam.S : null,
+        firstTeam: Item.firstTeam || null,
+        secondTeam: Item.secondTeam || null,
       }
     : null;
 };

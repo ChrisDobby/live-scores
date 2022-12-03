@@ -6,12 +6,14 @@
   "type": "module",
   "scripts": {
     "types": "tsc --noEmit --incremental",
-    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js --external:@aws-sdk/lib-dynamodb --external:@aws-sdk/client-dynamodb",
     "package": "mkdir -p ../dist && rm -f ../dist/update-sanity.zip && zip -r ../dist/update-sanity.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.223.0",
+    "@aws-sdk/lib-dynamodb": "^3.223.0",
     "@sanity/client": "^3.3.3",
     "date-fns": "^2.29.1"
   }
