@@ -1,0 +1,80 @@
+module "get-scorecard-urls" {
+  source = "./get-scorecard-urls"
+
+  live_scores_table_arn = aws_dynamodb_table.live-score-urls.arn
+}
+
+module "create-processors" {
+  source = "./create-processors"
+
+  first_team_sqs_url                       = aws_sqs_queue.first-team-scorecard-html.url
+  second_team_sqs_url                      = aws_sqs_queue.second-team-scorecard-html.url
+  live_scores_table_arn                    = aws_dynamodb_table.live-score-urls.arn
+  live_scores_table_stream_arn             = aws_dynamodb_table.live-score-urls.stream_arn
+  scorecard_processor_instance_profile_arn = module.scorecard-processor.scorecard_processor_instance_profile_arn
+  scorecard_processor_role_arn             = aws_iam_role.scorecard-processor.arn
+  scorecard_processor_security_group_id    = aws_security_group.allow_ssh.id
+}
+
+module "teardown-processors" {
+  source = "./teardown-processors"
+}
+
+module "scorecard-processor" {
+  source = "./scorecard-processor"
+
+  first_team_sqs_arn  = aws_sqs_queue.first-team-scorecard-html.arn
+  second_team_sqs_arn = aws_sqs_queue.second-team-scorecard-html.arn
+}
+
+module "create-scorecard" {
+  source = "./create-scorecard"
+
+  first_team_sqs_arn  = aws_sqs_queue.first-team-scorecard-html.arn
+  second_team_sqs_arn = aws_sqs_queue.second-team-scorecard-html.arn
+  updated_topic_arn   = aws_sns_topic.scorecard-updated.arn
+}
+
+module "socket-connect" {
+  source = "./socket-connect"
+
+  live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
+  connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+}
+
+module "socket-disconnect" {
+  source = "./socket-disconnect"
+
+  live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
+  connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+}
+
+module "update-bucket" {
+  source = "./update-bucket"
+
+  updated_topic_arn = aws_sns_topic.scorecard-updated.arn
+}
+
+module "update-processors" {
+  source = "./update-processors"
+
+  updated_topic_arn = aws_sns_topic.scorecard-updated.arn
+}
+
+module "update-sanity" {
+  source = "./update-sanity"
+
+  updated_topic_arn     = aws_sns_topic.scorecard-updated.arn
+  sanity_auth_token     = var.SANITY_AUTH_TOKEN
+  live_scores_table_arn = aws_dynamodb_table.live-score-urls.arn
+}
+
+module "update-sockets" {
+  source = "./update-sockets"
+
+  updated_topic_arn         = aws_sns_topic.scorecard-updated.arn
+  invoke_url                = aws_apigatewayv2_stage.live-scores-prod.invoke_url
+  connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+  live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
+  live_scores_api_name      = aws_apigatewayv2_stage.live-scores-prod.name
+}

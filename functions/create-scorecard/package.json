@@ -12,7 +12,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.99.0",
     "@aws-sdk/client-sns": "^3.131.0",
     "@cleckheaton-ccc-live-scores/schema": "*",
     "cheerio": "^1.0.0-rc.11"
