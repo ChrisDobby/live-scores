@@ -35,9 +35,9 @@ data "aws_iam_policy_document" "dynamo-stream" {
     ]
 
     resources = [
-      aws_dynamodb_table.live-score-urls.arn,
-      "${aws_dynamodb_table.live-score-urls.arn}/*",
-      "${aws_dynamodb_table.live-score-urls.arn}/*/*",
+      var.live_scores_table_arn,
+      "${var.live_scores_table_arn}/*",
+      "${var.live_scores_table_arn}/*/*",
     ]
   }
 }

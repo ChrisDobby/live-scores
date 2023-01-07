@@ -10,7 +10,7 @@ resource "aws_apigatewayv2_integration" "live-scores-connect" {
 
   connection_type           = "INTERNET"
   content_handling_strategy = "CONVERT_TO_TEXT"
-  integration_uri           = aws_lambda_function.socket-connect.invoke_arn
+  integration_uri           = module.socket-connect.invoke_arn
   integration_method        = "POST"
   passthrough_behavior      = "WHEN_NO_MATCH"
 }
@@ -21,7 +21,7 @@ resource "aws_apigatewayv2_integration" "live-scores-disconnect" {
 
   connection_type           = "INTERNET"
   content_handling_strategy = "CONVERT_TO_TEXT"
-  integration_uri           = aws_lambda_function.socket-disconnect.invoke_arn
+  integration_uri           = module.socket-disconnect.invoke_arn
   integration_method        = "POST"
   passthrough_behavior      = "WHEN_NO_MATCH"
 }

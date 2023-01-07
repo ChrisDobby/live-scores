@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs" {
-  role       = aws_iam_role.create-scorecard-role.name
+  role       = aws_iam_role.create-scorecard.name
   policy_arn = aws_iam_policy.sqs.arn
 }
 

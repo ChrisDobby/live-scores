@@ -12,7 +12,7 @@ module "create-processors" {
   live_scores_table_arn                    = aws_dynamodb_table.live-score-urls.arn
   live_scores_table_stream_arn             = aws_dynamodb_table.live-score-urls.stream_arn
   scorecard_processor_instance_profile_arn = module.scorecard-processor.scorecard_processor_instance_profile_arn
-  scorecard_processor_role_arn             = aws_iam_role.scorecard-processor.arn
+  scorecard_processor_role_arn             = module.scorecard-processor.scorecard_processor_role_arn
   scorecard_processor_security_group_id    = aws_security_group.allow_ssh.id
 }
 

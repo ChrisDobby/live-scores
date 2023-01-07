@@ -1,9 +1,9 @@
 resource "aws_lambda_function" "create-scorecard" {
   function_name    = "create-scorecard"
   handler          = "lib/index.handler"
-  filename         = "../../functions/dist/create-scorecard.zip"
-  source_code_hash = filebase64sha256("../../functions/dist/create-scorecard.zip")
-  role             = aws_iam_role.create-scorecard-role.arn
+  filename         = "../functions/dist/create-scorecard.zip"
+  source_code_hash = filebase64sha256("../functions/dist/create-scorecard.zip")
+  role             = aws_iam_role.create-scorecard.arn
 
   runtime = "nodejs18.x"
   timeout = 10

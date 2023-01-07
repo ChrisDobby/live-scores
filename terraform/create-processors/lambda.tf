@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "create-processors" {
   function_name    = "create-processors"
   handler          = "lib/index.handler"
-  filename         = "../../functions/dist/create-processors.zip"
-  source_code_hash = filebase64sha256("../../functions/dist/create-processors.zip")
+  filename         = "../functions/dist/create-processors.zip"
+  source_code_hash = filebase64sha256("../functions/dist/create-processors.zip")
   role             = aws_iam_role.create-processors.arn
 
   runtime = "nodejs18.x"

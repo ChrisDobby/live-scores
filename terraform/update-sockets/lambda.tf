@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "update-sockets" {
   function_name    = "update-sockets"
   handler          = "lib/index.handler"
-  filename         = "../../functions/dist/update-sockets.zip"
-  source_code_hash = filebase64sha256("../../functions/dist/update-sockets.zip")
+  filename         = "../functions/dist/update-sockets.zip"
+  source_code_hash = filebase64sha256("../functions/dist/update-sockets.zip")
   role             = aws_iam_role.update-sockets.arn
 
   runtime = "nodejs18.x"
