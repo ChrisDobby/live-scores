@@ -136,7 +136,7 @@ const getResult = (headerHtml: string) => {
   }
 };
 
-export const getScorecard = (scorecardHtml: string, headerHtml: string, eventSourceARN: string): Scorecard => {
+export const getScorecard = (scorecardUrl: string, scorecardHtml: string, headerHtml: string, eventSourceARN: string): Scorecard => {
   const $ = cheerio.load(scorecardHtml);
 
   const teamNames = getTeamNames($);
@@ -147,5 +147,5 @@ export const getScorecard = (scorecardHtml: string, headerHtml: string, eventSou
     innings.push(getInnings($, inningsDocument, teamNames[innings.length] || ''));
   }
 
-  return validateScorecard({ teamName: teamName[eventSourceARN], result: getResult(headerHtml), innings });
+  return validateScorecard({ url: scorecardUrl, teamName: teamName[eventSourceARN], result: getResult(headerHtml), innings });
 };

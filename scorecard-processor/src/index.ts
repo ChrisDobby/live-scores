@@ -39,7 +39,7 @@ const findScorecardTab = async () => {
 
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
-const processScorecardHtml = (queueUrl: string) => async () => {
+const processScorecardHtml = (queueUrl: string, scorecardUrl: string) => async () => {
   if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
     console.log('need to refresh');
     console.log(Date.now());
@@ -59,7 +59,7 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   lastHeader = headerHtml;
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
-    MessageBody: JSON.stringify({ headerHtml, scorecardHtml }),
+    MessageBody: JSON.stringify({ headerHtml, scorecardHtml, scorecardUrl }),
   });
   console.log('sending to sqs');
   await sqsClient.send(command);
@@ -92,5 +92,5 @@ const processScorecardHtml = (queueUrl: string) => async () => {
   await findScorecardTab();
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl), 60000);
+  setInterval(processScorecardHtml(queueUrl, scorecardUrl), 60000);
 })();

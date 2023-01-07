@@ -17,8 +17,8 @@ const publishToSns = (scorecard: Scorecard) => {
 };
 
 const processRecord = ({ body, eventSourceARN }) => {
-  const { scorecardHtml, headerHtml } = JSON.parse(body);
-  const scorecard = getScorecard(scorecardHtml, headerHtml, eventSourceARN);
+  const { scorecardHtml, headerHtml, scorecardUrl } = JSON.parse(body);
+  const scorecard = getScorecard(scorecardUrl, scorecardHtml, headerHtml, eventSourceARN);
   console.log(scorecard);
   return publishToSns(scorecard);
 };

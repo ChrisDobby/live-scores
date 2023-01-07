@@ -1,7 +1,6 @@
 import sanity from '@sanity/client';
 import { format, add } from 'date-fns';
 import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
-import { get } from './store';
 
 const sanityClient = sanity({ token: process.env.SANITY_AUTH_TOKEN, apiVersion: '2021-03-25', dataset: 'production', projectId: 'dq0grzvl', useCdn: false });
 
@@ -29,13 +28,7 @@ const updateSanity = async (scorecardMessage: unknown) => {
     return;
   }
 
-  const scorecardUrl = (await get(new Date().toDateString()))?.[scorecard.teamName];
-  if (!scorecardUrl) {
-    console.log('no scorecard url found for', new Date().toDateString(), scorecard.teamName);
-    return;
-  }
-
-  return Promise.all(fixtures.map(fixture => updateGameOver(fixture._id, scorecard.result, scorecardUrl)));
+  return Promise.all(fixtures.map(fixture => updateGameOver(fixture._id, scorecard.result, scorecard.url)));
 };
 
 export const handler = async ({ Records }) => {
