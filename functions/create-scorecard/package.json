@@ -7,7 +7,7 @@
   "scripts": {
     "types": "tsc --noEmit --incremental",
     "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js --external:@aws-sdk/client-s3 --external:@aws-sdk/client-sns",
-    "package": "mkdir -p ../dist && rm -f ../dist/create-scorecard.zip && zip -r ../dist/create-scorecard.zip lib/*.js"
+    "package": "mkdir -p ../dist && rm -f ../dist/create-scorecard.zip && npm run build && zip -r ../dist/create-scorecard.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",
