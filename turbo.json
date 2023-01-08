@@ -1,6 +1,5 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/main",
   "pipeline": {
     "types": {
       "dependsOn": [
@@ -10,17 +9,23 @@
     },
     "build": {
       "dependsOn": [
+        "types",
         "^build"
       ],
       "outputs": [
-        "lib/**"
+        "functions/**/lib"
       ]
     },
     "package": {
       "dependsOn": [
-        "^build"
+        "build"
       ],
-      "outputs": []
+      "outputs": [
+        "functions/**/dist/*.zip"
+      ],
+      "inputs": [
+        "package.json"
+      ]
     }
   }
 }

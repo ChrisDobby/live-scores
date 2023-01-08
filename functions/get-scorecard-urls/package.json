@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js --external:@aws-sdk/client-dynamodb --external:@aws-sdk/lib-dynamodb",
-    "package": "mkdir -p ../dist && rm -f ../dist/get-scorecard-urls.zip && npm run build && zip -r ../dist/get-scorecard-urls.zip lib/*.js"
+    "package": "mkdir -p ../dist && rm -f ../dist/get-scorecard-urls.zip && zip -r ../dist/get-scorecard-urls.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",

@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "turbo run build --filter=...[origin/main]",
-    "build:all": "turbo run build",
-    "types": "turbo run types --filter=...[origin/main]",
-    "types:all": "turbo run types",
-    "package": "turbo run package --filter=...[origin/main]",
-    "package:all": "turbo run package"
+    "build": "turbo run build",
+    "types": "turbo run types",
+    "package": "turbo run package"
   },
   "private": true,
   "devDependencies": {
