@@ -78,3 +78,10 @@ module "update-sockets" {
   live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
   live_scores_api_name      = aws_apigatewayv2_stage.live-scores-prod.name
 }
+
+module "push-notify" {
+  source = "./push-notify"
+
+  updated_topic_arn = aws_sns_topic.scorecard-updated.arn
+  push_topic_arn    = aws_sns_topic.push-notification.arn
+}

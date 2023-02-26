@@ -27,6 +27,7 @@ const InningsSchema = z.object({
     innings: z.array(PlayerInningsSchema),
     extras: z.string(),
     total: z.string(),
+    team: z.string(),
   }),
   fallOfWickets: z.string(),
   bowling: z.array(BowlingFiguresSchema),

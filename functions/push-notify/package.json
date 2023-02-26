@@ -1,18 +1,18 @@
 {
-  "name": "@cleckheaton-ccc-live-scores/update-bucket",
+  "name": "@cleckheaton-ccc-live-scores/push-notify",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "types": "tsc --noEmit --incremental",
     "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js --external:@aws-sdk/client-s3",
-    "package": "mkdir -p ../dist && rm -f ../dist/update-bucket.zip && zip -r ../dist/update-bucket.zip lib/*.js"
+    "package": "mkdir -p ../dist && rm -f ../dist/push-notify.zip && zip -r ../dist/push-notify.zip lib/*.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.99.0",
+    "@aws-sdk/client-sns": "^3.131.0",
     "@cleckheaton-ccc-live-scores/schema": "*",
     "@cleckheaton-ccc-live-scores/common": "*"
   }
