@@ -6,7 +6,7 @@ type UpdateParams = { scorecard: Scorecard; push: Push; updates: Update[] };
 
 const oversUpdate = ({ scorecard, push, updates }: UpdateParams): UpdateParams => {
   const overs = getOvers(scorecard);
-  return overs[overs.length - 1] - push.overs >= 5
+  return overs[overs.length - 1] - push.overs >= 10
     ? {
         scorecard,
         updates: [
@@ -32,7 +32,7 @@ const wicketsUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams
               ...params.updates,
               {
                 type: 'wicket',
-                team: scorecard.innings[scorecard.innings.length - 1].batting.team,
+                team: scorecard.teamName,
                 text: `${inning.name} ${inning.howout.join(' ')} ${inning.runs}`,
               },
             ],
@@ -55,7 +55,7 @@ const runsUpdate =
                 ...params.updates,
                 {
                   type: 'landmark',
-                  team: scorecard.innings[scorecard.innings.length - 1].batting.team,
+                  team: scorecard.teamName,
                   text: `${inning.name} ${inning.runs} from ${inning.balls} balls. ${inning.fours} 4s and ${inning.sixes} 6s`,
                 },
               ],
@@ -81,7 +81,7 @@ const wicketsTakenUpdate =
                 ...params.updates,
                 {
                   type: 'landmark',
-                  team: scorecard.innings[scorecard.innings.length - 1].batting.team,
+                  team: scorecard.teamName,
                   text: `${bowling.name} ${bowling.wickets} - ${bowling.runs} from ${bowling.overs} overs}`,
                 },
               ],
@@ -95,11 +95,17 @@ const wicketsTakenUpdate =
 const fiveFerUpdate = wicketsTakenUpdate(5);
 const tenFerUpdate = wicketsTakenUpdate(10);
 
+const resultUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams => ({
+  scorecard,
+  updates: scorecard.result === push.result ? updates : [...updates, { type: 'result', team: scorecard.teamName, text: `${scorecard.result}` }],
+  push: scorecard.result === push.result ? push : { ...push, result: scorecard.result },
+});
+
 const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
 export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate].reduce((params, update) => update(params), {
+  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate, resultUpdate].reduce((params, update) => update(params), {
     scorecard,
     push: updatePush(push, scorecard),
     updates: [],

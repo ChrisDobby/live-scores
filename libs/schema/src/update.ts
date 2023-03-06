@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const UpdateSchema = z.object({
-  type: z.union([z.literal('overs'), z.literal('wicket'), z.literal('landmark')]),
+  type: z.union([z.literal('overs'), z.literal('wicket'), z.literal('landmark'), z.literal('result')]),
   team: z.string(),
   text: z.string(),
 });

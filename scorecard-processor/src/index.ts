@@ -92,5 +92,5 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string) => async (
   await findScorecardTab();
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl, scorecardUrl), 60000);
+  setInterval(processScorecardHtml(queueUrl, scorecardUrl), 20000);
 })();

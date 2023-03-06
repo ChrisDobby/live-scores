@@ -1,2 +1,3 @@
 export * from './scorecard';
 export * from './update';
+export * from './webNotification';
