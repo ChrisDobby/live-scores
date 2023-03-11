@@ -71,7 +71,7 @@ resource "aws_apigatewayv2_api" "notifications" {
   cors_configuration {
     allow_headers = ["*"]
     allow_methods = ["POST"]
-    allow_origins = ["https://cleckheatoncricketclub.org.uk/"]
+    allow_origins = ["https://cleckheatoncricketclub.org.uk"]
   }
 }
 
