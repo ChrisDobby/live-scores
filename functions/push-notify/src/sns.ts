@@ -7,6 +7,7 @@ const { PUSH_TOPIC_ARN: pushTopicArn } = process.env;
 
 export const publishToSns = async (update: Update) => {
   console.log(`publising to ${pushTopicArn}`);
+  console.log('update', JSON.stringify(update, null, 2);
   const command = new PublishCommand({
     TopicArn: pushTopicArn,
     Message: JSON.stringify(update),
