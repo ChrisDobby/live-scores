@@ -5,7 +5,7 @@ resource "aws_lambda_function" "get-scorecard-urls" {
   source_code_hash = filebase64sha256("../functions/dist/get-scorecard-urls.zip")
   role             = aws_iam_role.get-scorecard-urls.arn
 
-  runtime     = "nodejs18.x"
+  runtime     = "nodejs14.x"
   timeout     = 600
   memory_size = 256
 
