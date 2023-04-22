@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "web-notify" {
 
     principals {
       type        = "service"
-      identifiers = "sns.amazonaws.com"
+      identifiers = ["sns.amazonaws.com"]
     }
 
     actions   = ["sqs:SendMessage"]
