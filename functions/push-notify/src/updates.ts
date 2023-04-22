@@ -26,7 +26,7 @@ const wicketsUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams
   scorecard,
   ...scorecard.innings[scorecard.innings.length - 1].batting.innings.reduce(
     (params, inning, index) =>
-      inning.howout.filter(ho => ho.toLowerCase().trim() !== 'not out').length && params.push.wickets.includes(index)
+      inning.howout.filter(Boolean).length && inning.howout.filter(ho => ho && ho.toLowerCase().trim() !== 'not out').length && !params.push.wickets.includes(index)
         ? {
             updates: [
               ...params.updates,
@@ -105,7 +105,7 @@ const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
 export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  [oversUpdate].reduce((params, update) => update(params), {
+  [oversUpdate, wicketsUpdate].reduce((params, update) => update(params), {
     scorecard,
     push: updatePush(push, scorecard),
     updates: [],

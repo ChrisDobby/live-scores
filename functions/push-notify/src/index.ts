@@ -4,7 +4,6 @@ import { publishToSns } from './sns';
 import { getUpdate } from './updates';
 
 const handleScorecard = async (scorecard: Scorecard) => {
-  console.log(scorecard);
   const lastPush = await getLastPush(scorecard);
   console.log(lastPush);
   const { updates, push } = getUpdate(scorecard, lastPush);
