@@ -75,7 +75,7 @@ const wicketsTakenUpdate =
     scorecard,
     ...scorecard.innings[scorecard.innings.length - 1].bowling.reduce(
       (params, bowling, index) =>
-        Number(bowling.wickets) >= wickets && !params.push.bowlingLandmarks.find(lm => lm.index === index && lm.wickets === wickets)
+        Number(bowling.wickets) >= wickets && !params.push.bowlingLandmarks?.find(lm => lm.index === index && lm.wickets === wickets)
           ? {
               updates: [
                 ...params.updates,
@@ -85,7 +85,7 @@ const wicketsTakenUpdate =
                   text: `${bowling.name} ${bowling.wickets} - ${bowling.runs} from ${bowling.overs} overs}`,
                 },
               ],
-              push: { ...params.push, bowlingLandmarks: [...params.push.bowlingLandmarks, { index, wickets }] },
+              push: { ...params.push, bowlingLandmarks: [...(params.push.bowlingLandmarks || []), { index, wickets }] },
             }
           : params,
       { updates, push },
@@ -105,7 +105,7 @@ const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
 export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate].reduce((params, update) => update(params), {
+  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate].reduce((params, update) => update(params), {
     scorecard,
     push: updatePush(push, scorecard),
     updates: [],
