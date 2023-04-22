@@ -23,7 +23,7 @@ const extractOvers = (total: string) => {
   }
 
   const parts = total.substring(openBracket + 1).split(' ');
-  const oversLabel = parts.indexOf('Overs');
+  const oversLabel = parts.indexOf('Overs,');
   const oversText = parts[oversLabel - 1];
   return Number(oversText);
 };

@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "s3" {
     actions = [
       "s3:PutObject",
       "s3:GetObject",
-      "s3:ListObjects",
+      "s3:ListBucket",
     ]
 
     resources = [
@@ -41,4 +41,24 @@ data "aws_iam_policy_document" "s3" {
 resource "aws_iam_role_policy_attachment" "s3" {
   role       = aws_iam_role.push-notify.name
   policy_arn = aws_iam_policy.s3.arn
+}
+
+
+resource "aws_iam_policy" "sns" {
+  name   = "push-notify-sns"
+  policy = data.aws_iam_policy_document.sns.json
+}
+
+data "aws_iam_policy_document" "sns" {
+  statement {
+    effect  = "Allow"
+    actions = ["sns:Publish"]
+
+    resources = [var.push_topic_arn]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "sns" {
+  role       = aws_iam_role.push-notify.name
+  policy_arn = aws_iam_policy.sns.arn
 }

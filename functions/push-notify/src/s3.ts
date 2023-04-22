@@ -5,7 +5,7 @@ import { Push } from './types';
 
 const s3Client = new S3Client({});
 
-const { SCORECARD_BUCKET_NAME: bucketName } = process.env;
+const { PUSH_NOTIFY_BUCKET_NAME: bucketName } = process.env;
 
 const emptyPush = {
   inningsNumber: 1,
@@ -13,6 +13,7 @@ const emptyPush = {
   wickets: [],
   battingLandmarks: [],
   bowlingLandmarks: [],
+  result: null,
 };
 
 export const getLastPush = async (scorecard: Scorecard): Promise<Push> => {
@@ -29,7 +30,7 @@ export const getLastPush = async (scorecard: Scorecard): Promise<Push> => {
     }),
   );
 
-  return Body ? (JSON.parse(Body.toString()) as Push) : emptyPush;
+  return Body ? ((await new Response(Body as ReadableStream, {}).json()) as Push) : emptyPush;
 };
 
 export const updateLastPush = async (scorecard: Scorecard, push: Push) => {

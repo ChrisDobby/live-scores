@@ -105,7 +105,7 @@ const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
 export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate, resultUpdate].reduce((params, update) => update(params), {
+  [oversUpdate].reduce((params, update) => update(params), {
     scorecard,
     push: updatePush(push, scorecard),
     updates: [],
