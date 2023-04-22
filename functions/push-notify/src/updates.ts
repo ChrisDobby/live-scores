@@ -97,7 +97,7 @@ const tenFerUpdate = wicketsTakenUpdate(10);
 
 const resultUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams => ({
   scorecard,
-  updates: scorecard.result === push.result ? updates : [...updates, { type: 'result', team: scorecard.teamName, text: `${scorecard.result}` }],
+  updates: !scorecard.result || scorecard.result === push.result ? updates : [...updates, { type: 'result', team: scorecard.teamName, text: `${scorecard.result}` }],
   push: scorecard.result === push.result ? push : { ...push, result: scorecard.result },
 });
 
@@ -105,7 +105,7 @@ const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
 export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate].reduce((params, update) => update(params), {
+  [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate, resultUpdate].reduce((params, update) => update(params), {
     scorecard,
     push: updatePush(push, scorecard),
     updates: [],
