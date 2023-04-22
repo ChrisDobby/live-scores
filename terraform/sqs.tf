@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "web-notify" {
     effect = "Allow"
 
     principals {
-      type        = "service"
+      type        = "Service"
       identifiers = ["sns.amazonaws.com"]
     }
 
