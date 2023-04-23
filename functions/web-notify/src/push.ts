@@ -6,5 +6,7 @@ const vapidPrivateKey = `${process.env.VAPID_PRIVATE_KEY}`;
 
 webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
 
-export const push = async (notification: { title: string; body: string }, subscriptions: PushSubscription[]) =>
-  Promise.all(subscriptions.map(subscription => webpush.sendNotification(subscription, JSON.stringify(notification))));
+export const push = async (notification: { title: string; body: string }, subscriptions: PushSubscription[]) => {
+  console.log('Sending notification', notification);
+  await Promise.all(subscriptions.map(subscription => webpush.sendNotification(subscription, JSON.stringify(notification))));
+};
