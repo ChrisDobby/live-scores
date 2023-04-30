@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "dynamo" {
 }
 
 resource "aws_iam_role_policy_attachment" "dynamo" {
-  role       = aws_iam_role.web-notify.name
+  role       = aws_iam_role.delete-web-subscription.name
   policy_arn = aws_iam_policy.dynamo.arn
 }
 
