@@ -63,12 +63,12 @@ resource "aws_iam_role_policy_attachment" "sqs" {
   policy_arn = aws_iam_policy.sqs.arn
 }
 
-resource "aws_iam_policy" "sqs" {
-  name   = "web-notify-subscription-sqs"
-  policy = data.aws_iam_policy_document.sqs.json
+resource "aws_iam_policy" "delete-subscription-sqs" {
+  name   = "web-notify-delete-subscription-sqs"
+  policy = data.aws_iam_policy_document.delete-subscription-sqs.json
 }
 
-data "aws_iam_policy_document" "sqs" {
+data "aws_iam_policy_document" "delete-subscription-sqs" {
   statement {
     actions = ["sqs:SendMessage"]
 
@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "sqs" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "sqs" {
+resource "aws_iam_role_policy_attachment" "delete-subscription-sqs" {
   role       = aws_iam_role.web-notify.name
-  policy_arn = aws_iam_policy.sqs.arn
+  policy_arn = aws_iam_policy.delete-subscription-sqs.arn
 }
