@@ -42,6 +42,11 @@ resource "aws_apigatewayv2_route" "live-scores-disconnect" {
 resource "aws_apigatewayv2_stage" "live-scores-prod" {
   api_id = aws_apigatewayv2_api.live-scores.id
   name   = "prod"
+
+  default_route_settings {
+    throttling_burst_limit    = 1000
+    throttling_rate_limit     = 100
+  }
 }
 
 resource "aws_apigatewayv2_deployment" "live-scores" {
