@@ -28,3 +28,8 @@ resource "aws_lambda_event_source_mapping" "create-second-team-scorecard-sqs-sou
   function_name    = aws_lambda_function.create-scorecard.function_name
   batch_size       = 10
 }
+
+resource "aws_cloudwatch_log_group" "create-scorecard" {
+  name              = "/aws/lambda/${aws_lambda_function.create-scorecard.function_name}"
+  retention_in_days = 14
+}

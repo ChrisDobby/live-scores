@@ -8,3 +8,8 @@ resource "aws_lambda_function" "teardown-processors" {
   runtime = "nodejs18.x"
   timeout = 10
 }
+
+resource "aws_cloudwatch_log_group" "teardown-processors" {
+  name              = "/aws/lambda/${aws_lambda_function.teardown-processors.function_name}"
+  retention_in_days = 14
+}

@@ -23,3 +23,8 @@ resource "aws_lambda_permission" "api-authoriser" {
 
   source_arn = "${var.notifications_execution_arn}/authorizers/${var.notifications_authoriser_id}"
 }
+
+resource "aws_cloudwatch_log_group" "api-authoriser" {
+  name              = "/aws/lambda/${aws_lambda_function.api-authoriser.function_name}"
+  retention_in_days = 14
+}

@@ -22,3 +22,8 @@ resource "aws_lambda_event_source_mapping" "web-notify" {
   function_name    = aws_lambda_function.web-notify.function_name
   batch_size       = 10
 }
+
+resource "aws_cloudwatch_log_group" "web-notify" {
+  name              = "/aws/lambda/${aws_lambda_function.web-notify.function_name}"
+  retention_in_days = 14
+}

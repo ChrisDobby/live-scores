@@ -31,3 +31,8 @@ resource "aws_lambda_event_source_mapping" "create-processors" {
   batch_size             = 1
   maximum_retry_attempts = 2
 }
+
+resource "aws_cloudwatch_log_group" "create-processors" {
+  name              = "/aws/lambda/${aws_lambda_function.create-processors.function_name}"
+  retention_in_days = 14
+}

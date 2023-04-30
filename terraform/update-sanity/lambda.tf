@@ -22,3 +22,8 @@ resource "aws_lambda_permission" "update-sanity" {
   principal     = "sns.amazonaws.com"
   source_arn    = var.updated_topic_arn
 }
+
+resource "aws_cloudwatch_log_group" "update-sanity" {
+  name              = "/aws/lambda/${aws_lambda_function.update-sanity.function_name}"
+  retention_in_days = 14
+}

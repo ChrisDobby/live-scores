@@ -23,3 +23,8 @@ resource "aws_lambda_permission" "subscribe-to-scores" {
 
   source_arn = "${var.notifications_execution_arn}/*/*/*"
 }
+
+resource "aws_cloudwatch_log_group" "subscribe-to-scores" {
+  name              = "/aws/lambda/${aws_lambda_function.subscribe-to-scores.function_name}"
+  retention_in_days = 14
+}

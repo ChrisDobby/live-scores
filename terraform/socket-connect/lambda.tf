@@ -17,3 +17,8 @@ resource "aws_lambda_permission" "socket-connect" {
 
   source_arn = "${var.live_scores_execution_arn}/*/$connect"
 }
+
+resource "aws_cloudwatch_log_group" "socket-connect" {
+  name              = "/aws/lambda/${aws_lambda_function.socket-connect.function_name}"
+  retention_in_days = 14
+}

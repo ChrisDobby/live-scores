@@ -23,3 +23,8 @@ resource "aws_lambda_permission" "push-notify" {
   principal     = "sns.amazonaws.com"
   source_arn    = var.updated_topic_arn
 }
+
+resource "aws_cloudwatch_log_group" "push-notify" {
+  name              = "/aws/lambda/${aws_lambda_function.push-notify.function_name}"
+  retention_in_days = 14
+}

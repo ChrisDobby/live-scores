@@ -11,3 +11,8 @@ resource "aws_lambda_function" "get-scorecard-urls" {
 
   layers = ["arn:aws:lambda:eu-west-2:604776666101:layer:chrome-aws-lambda:1"]
 }
+
+resource "aws_cloudwatch_log_group" "get-scorecard-urls" {
+  name              = "/aws/lambda/${aws_lambda_function.get-scorecard-urls.function_name}"
+  retention_in_days = 14
+}
