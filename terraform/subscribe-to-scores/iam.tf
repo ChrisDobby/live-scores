@@ -26,7 +26,7 @@ resource "aws_iam_policy" "dynamo" {
 
 data "aws_iam_policy_document" "dynamo" {
   statement {
-    actions = ["dynamodb:PutItem", "dynamodb:DeleteItem"]
+    actions = ["dynamodb:PutItem"]
 
     resources = [
       var.subscriptions_table_arn
@@ -39,7 +39,6 @@ resource "aws_iam_role_policy_attachment" "dynamo" {
   policy_arn = aws_iam_policy.dynamo.arn
 }
 
-
 resource "aws_iam_policy" "sqs" {
   name   = "subscribe-to-scores-sqs"
   policy = data.aws_iam_policy_document.sqs.json
@@ -50,7 +49,8 @@ data "aws_iam_policy_document" "sqs" {
     actions = ["sqs:SendMessage"]
 
     resources = [
-      var.web_notify_queue_arn
+      var.web_notify_queue_arn,
+      var.delete_notification_subscription_queue_arn
     ]
   }
 }

@@ -21,3 +21,11 @@ variable "subscriptions_table_arn" {
 variable "sqs_arn" {
   type = string
 }
+
+variable "delete_notification_subscription_queue_url" {
+  type = string
+}
+
+variable "delete_notification_subscription_queue_arn" {
+  type = string
+}

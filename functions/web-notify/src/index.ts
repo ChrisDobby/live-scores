@@ -1,6 +1,7 @@
 import { Update, validateUpdate, validateWebNotification, WebNotification } from '@cleckheaton-ccc-live-scores/schema';
 import { push } from './push';
 import { getSubscriptions } from './dynamo';
+import { sendDeleteSubscriptionMessage } from './sqs';
 
 const getTitle = (update: Update) => {
   switch (update.team) {
@@ -19,10 +20,10 @@ const createNotification = (update: Update) => ({ title: getTitle(update), body:
 
 const handleWebNotification = async (message: unknown) => {
   const webNotification = validateWebNotification(message);
-  await push(webNotification, [webNotification.subscription]);
+  await push(sendDeleteSubscriptionMessage, webNotification, [webNotification.subscription]);
 };
 
-const handleUpdate = async (message: unknown) => push(createNotification(validateUpdate(message)), await getSubscriptions());
+const handleUpdate = async (message: unknown) => push(async () => {}, createNotification(validateUpdate(message)), await getSubscriptions());
 
 const handleMessage = async (message: Update | WebNotification) => {
   console.log('Received message', message);

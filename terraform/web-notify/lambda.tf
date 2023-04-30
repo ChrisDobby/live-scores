@@ -10,9 +10,10 @@ resource "aws_lambda_function" "web-notify" {
 
   environment {
     variables = merge({
-      VAPID_SUBJECT     = var.vapid_subject,
-      VAPID_PUBLIC_KEY  = var.vapid_public_key,
-      VAPID_PRIVATE_KEY = var.vapid_private_key,
+      VAPID_SUBJECT                 = var.vapid_subject,
+      VAPID_PUBLIC_KEY              = var.vapid_public_key,
+      VAPID_PRIVATE_KEY             = var.vapid_private_key,
+      DELETE_SUBSCRIPTION_QUEUE_URL = var.delete_notification_subscription_queue_url
     }, {})
   }
 }

@@ -8,16 +8,15 @@ data "aws_iam_policy_document" "lambda-assume-role" {
   }
 }
 
-resource "aws_iam_role" "web-notify" {
-  name               = "web-notify"
+resource "aws_iam_role" "delete-web-subscription" {
+  name               = "delete-web-subscription"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch" {
-  role       = aws_iam_role.web-notify.name
+  role       = aws_iam_role.delete-web-subscription.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
-
 
 resource "aws_iam_policy" "dynamo" {
   name   = "web-notify-dynamo"
@@ -26,7 +25,7 @@ resource "aws_iam_policy" "dynamo" {
 
 data "aws_iam_policy_document" "dynamo" {
   statement {
-    actions = ["dynamodb:Scan"]
+    actions = ["dynamodb:DeleteItem"]
 
     resources = [
       var.subscriptions_table_arn
@@ -40,7 +39,7 @@ resource "aws_iam_role_policy_attachment" "dynamo" {
 }
 
 resource "aws_iam_policy" "sqs" {
-  name   = "web-notify-sqs"
+  name   = "delete-web-subscription-sqs"
   policy = data.aws_iam_policy_document.sqs.json
 }
 
@@ -59,26 +58,6 @@ data "aws_iam_policy_document" "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs" {
-  role       = aws_iam_role.web-notify.name
-  policy_arn = aws_iam_policy.sqs.arn
-}
-
-resource "aws_iam_policy" "sqs" {
-  name   = "web-notify-subscription-sqs"
-  policy = data.aws_iam_policy_document.sqs.json
-}
-
-data "aws_iam_policy_document" "sqs" {
-  statement {
-    actions = ["sqs:SendMessage"]
-
-    resources = [
-      var.delete_notification_subscription_queue_arn
-    ]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "sqs" {
-  role       = aws_iam_role.web-notify.name
+  role       = aws_iam_role.delete-web-subscription.name
   policy_arn = aws_iam_policy.sqs.arn
 }

@@ -12,6 +12,12 @@ resource "aws_sqs_queue" "second-team-scorecard-html" {
 
 resource "aws_sqs_queue" "web-notify" {
   name                       = "web-notify"
+  message_retention_seconds  = 60
+  visibility_timeout_seconds = 60
+}
+
+resource "aws_sqs_queue" "delete-notification-subscription" {
+  name                       = "delete-notification-subscription"
   message_retention_seconds  = 300
   visibility_timeout_seconds = 60
 }

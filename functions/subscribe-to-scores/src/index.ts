@@ -1,7 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { validateWebNotification, validateSubscription, Subscription } from '@cleckheaton-ccc-live-scores/schema';
-import { addToWebNotifyQueue } from './sqs';
+import { addToDeleteSubscriptionQueue, addToWebNotifyQueue } from './sqs';
 
 const client = new DynamoDBClient({});
 const documentClient = DynamoDBDocumentClient.from(client);
@@ -18,7 +18,7 @@ const subscribe = async (subscription: Subscription) => {
 };
 
 const unsubscribe = async (endpoint: string) => {
-  await documentClient.send(new DeleteCommand({ TableName, Key: { endpoint } }));
+  await addToDeleteSubscriptionQueue(endpoint);
 };
 
 export const handler = async ({ body, path }) => {

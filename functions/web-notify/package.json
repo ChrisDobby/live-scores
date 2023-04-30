@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.223.0",
+    "@aws-sdk/client-sqs": "^3.321.1",
     "@aws-sdk/lib-dynamodb": "^3.223.0",
     "@cleckheaton-ccc-live-scores/schema": "*",
     "web-push": "^3.5.0"

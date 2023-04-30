@@ -10,7 +10,8 @@ resource "aws_lambda_function" "subscribe-to-scores" {
 
   environment {
     variables = merge({
-      WEB_NOTIFY_QUEUE_URL = var.web_notify_queue_url,
+      WEB_NOTIFY_QUEUE_URL          = var.web_notify_queue_url,
+      DELETE_SUBSCRIPTION_QUEUE_URL = var.delete_notification_subscription_queue_url,
     }, {})
   }
 }
