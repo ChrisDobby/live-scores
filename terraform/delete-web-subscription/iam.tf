@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
 }
 
 resource "aws_iam_policy" "dynamo" {
-  name   = "web-notify-dynamo"
+  name   = "delete-web-subscription-dynamo"
   policy = data.aws_iam_policy_document.dynamo.json
 }
 
