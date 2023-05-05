@@ -27,7 +27,7 @@ const getQueueUrl = (teamId: string) => {
 };
 
 type ScorecardUrl = { teamId: string; scorecardUrl: string };
-const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `pm2 start npm --name="team-${teamId}" -- start ${scorecardUrl} ${getQueueUrl(teamId)}`;
+const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `pm2 start npm --name="team-${teamId}" -- start ${scorecardUrl} ${getQueueUrl(teamId)} ${teamId}`;
 
 const createInstance = (scorecardUrls: ScorecardUrl[]) => {
   const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join('\n')}`;

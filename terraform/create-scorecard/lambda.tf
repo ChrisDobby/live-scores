@@ -10,8 +10,6 @@ resource "aws_lambda_function" "create-scorecard" {
 
   environment {
     variables = merge({
-      FIRST_TEAM_QUEUE_ARN  = var.first_team_sqs_arn,
-      SECOND_TEAM_QUEUE_ARN = var.second_team_sqs_arn,
       UPDATE_SNS_TOPIC_ARN  = var.updated_topic_arn,
     }, {})
   }

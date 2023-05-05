@@ -1,11 +1,9 @@
 import * as cheerio from 'cheerio';
 import { Scorecard, PlayerInnings, Innings, BowlingFigures, validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
-const { FIRST_TEAM_QUEUE_ARN: firstTeamQueueArn, SECOND_TEAM_QUEUE_ARN: secondTeamQueueArn } = process.env;
-
 const teamName = {
-  [`${firstTeamQueueArn}`]: 'firstTeam',
-  [`${secondTeamQueueArn}`]: 'secondTeam',
+  '1': 'firstTeam',
+  '2': 'secondTeam',
 };
 
 const getBowlingFigures = ($, row): BowlingFigures => {
@@ -136,7 +134,7 @@ const getResult = (headerHtml: string) => {
   }
 };
 
-export const getScorecard = (scorecardUrl: string, scorecardHtml: string, headerHtml: string, eventSourceARN: string): Scorecard => {
+export const getScorecard = (scorecardUrl: string, scorecardHtml: string, headerHtml: string, teamId: string): Scorecard => {
   const $ = cheerio.load(scorecardHtml);
 
   const teamNames = getTeamNames($);
@@ -147,5 +145,5 @@ export const getScorecard = (scorecardUrl: string, scorecardHtml: string, header
     innings.push(getInnings($, inningsDocument, teamNames[innings.length] || ''));
   }
 
-  return validateScorecard({ url: scorecardUrl, teamName: teamName[eventSourceARN], result: getResult(headerHtml), innings });
+  return validateScorecard({ url: scorecardUrl, teamName: teamName[teamId], result: getResult(headerHtml), innings });
 };
