@@ -10,6 +10,7 @@ git clone https://github.com/ChrisDobby/cleckheaton-cc.git
 cd cleckheaton-cc/live-scores/scorecard-processor
 npm ci
 npm run build
+npm i -g pm2
 `;
 
 const client = new EC2Client({ region: 'eu-west-2' });
@@ -26,10 +27,10 @@ const getQueueUrl = (teamId: string) => {
 };
 
 type ScorecardUrl = { teamId: string; scorecardUrl: string };
-const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `npm run start ${scorecardUrl} ${getQueueUrl(teamId)}`;
+const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `pm2 start npm --name="team-${teamId}" -- start ${scorecardUrl} ${getQueueUrl(teamId)}`;
 
 const createInstance = (scorecardUrls: ScorecardUrl[]) => {
-  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join(' & ')}`;
+  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join('\n')}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
