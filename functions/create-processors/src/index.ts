@@ -10,7 +10,7 @@ git clone https://github.com/ChrisDobby/cleckheaton-cc.git
 cd cleckheaton-cc/live-scores/scorecard-processor
 npm ci
 npm run build
-npm run start`;
+`;
 
 const client = new EC2Client({ region: 'eu-west-2' });
 
@@ -25,8 +25,11 @@ const getQueueUrl = (teamId: string) => {
   }
 };
 
-const createInstance = (teamId: string, scorecardUrl: string) => {
-  const userData = `${USER_DATA} ${scorecardUrl} ${getQueueUrl(teamId)}`;
+type ScorecardUrl = { teamId: string; scorecardUrl: string };
+const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `npm run start ${scorecardUrl} ${getQueueUrl(teamId)}`;
+
+const createInstance = (scorecardUrls: ScorecardUrl[]) => {
+  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join(' & ')}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
@@ -41,7 +44,7 @@ const createInstance = (teamId: string, scorecardUrl: string) => {
         ResourceType: 'instance',
         Tags: [
           { Key: 'Owner', Value: 'cleckheaton-cc' },
-          { Key: 'Team', Value: teamId },
+          { Key: 'InProgress', Value: scorecardUrls.length.toString() },
         ],
       },
     ],
@@ -50,24 +53,16 @@ const createInstance = (teamId: string, scorecardUrl: string) => {
   return client.send(command);
 };
 
-const getCreator = (teamId: string, field?: { S: string }) => {
-  if (!field) {
-    return null;
-  }
+const getScorecardUrl = (teamId: string, field?: { S: string }) => (!field ? null : { teamId, scorecardUrl: field.S });
 
-  return createInstance(teamId, field.S);
-};
-
-const handleRecord = async ({ dynamodb: { NewImage } }): Promise<(RunInstancesCommandOutput | null)[]> => {
+const handleRecord = async ({ dynamodb: { NewImage } }): Promise<RunInstancesCommandOutput | null> => {
   if (!NewImage) {
-    return [];
+    return null;
   }
 
   console.log(JSON.stringify(NewImage, null, 2));
   const { firstTeam, secondTeam } = NewImage;
-  const creators = [getCreator('1', firstTeam), getCreator('2', secondTeam)].filter(Boolean);
-
-  return Promise.all(creators);
+  return createInstance([getScorecardUrl('1', firstTeam), getScorecardUrl('2', secondTeam)].filter(Boolean) as ScorecardUrl[]);
 };
 
 export const handler = async ({ Records }) => {

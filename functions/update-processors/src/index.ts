@@ -1,11 +1,34 @@
-import { EC2Client, DescribeInstancesCommand, TerminateInstancesCommand } from '@aws-sdk/client-ec2';
+import { EC2Client, DescribeInstancesCommand, TerminateInstancesCommand, Instance, CreateTagsCommand } from '@aws-sdk/client-ec2';
 import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const ec2Client = new EC2Client([]);
 
-const teamTags = {
-  firstTeam: '1',
-  secondTeam: '2',
+const terminateInstance = async (instanceId: string) =>
+  ec2Client.send(
+    new TerminateInstancesCommand({
+      InstanceIds: [instanceId],
+    }),
+  );
+
+const setInProgressCount = async (instanceId: string, inProgressCount: number) =>
+  ec2Client.send(
+    new CreateTagsCommand({
+      Resources: [instanceId],
+      Tags: [{ Key: 'InProgress', Value: `${inProgressCount}` }],
+    }),
+  );
+
+const updateInstance = async ({ InstanceId, Tags }: Instance) => {
+  if (!InstanceId) {
+    return;
+  }
+
+  const inProgressTag = Number(Tags?.find(({ Key }) => Key === 'InProgress')?.Value);
+  if (inProgressTag && inProgressTag > 1) {
+    await setInProgressCount(InstanceId, inProgressTag - 1);
+  } else {
+    await terminateInstance(InstanceId);
+  }
 };
 
 const updateProcessor = async (scorecardMessage: unknown) => {
@@ -15,10 +38,7 @@ const updateProcessor = async (scorecardMessage: unknown) => {
   }
 
   const command = new DescribeInstancesCommand({
-    Filters: [
-      { Name: 'tag:Owner', Values: ['cleckheaton-cc'] },
-      { Name: 'tag:Team', Values: [teamTags[scorecard.teamName]] },
-    ],
+    Filters: [{ Name: 'tag:Owner', Values: ['cleckheaton-cc'] }],
   });
 
   const instances = await ec2Client.send(command);
@@ -28,12 +48,7 @@ const updateProcessor = async (scorecardMessage: unknown) => {
     return;
   }
 
-  const instanceIds = instances.Reservations.flatMap(({ Instances }) => Instances?.map(({ InstanceId }) => InstanceId)).filter(Boolean) as string[];
-  const terminateCommand = new TerminateInstancesCommand({
-    InstanceIds: instanceIds,
-  });
-
-  await ec2Client.send(terminateCommand);
+  await Promise.all(instances.Reservations.flatMap(({ Instances }) => Instances?.map(updateInstance)));
 };
 
 export const handler = async ({ Records }) => {
