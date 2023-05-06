@@ -13,7 +13,7 @@ const handleScorecard = async (scorecard: Scorecard) => {
 const handleMessage = async (scorecardMessage: unknown) => {
   const scorecard = validateScorecard(scorecardMessage);
   console.log(scorecard);
-  if (!scorecard.innings || !scorecard.innings.length) {
+  if (!scorecard.innings) {
     return;
   }
 
