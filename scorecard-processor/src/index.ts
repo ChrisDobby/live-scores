@@ -39,7 +39,7 @@ const findScorecardTab = async () => {
 
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
-const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamId: string) => async () => {
+const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: string) => async () => {
   if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
     console.log('need to refresh');
     console.log(Date.now());
@@ -59,7 +59,7 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamId: st
   lastHeader = headerHtml;
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
-    MessageBody: JSON.stringify({ headerHtml, scorecardHtml, scorecardUrl, teamId }),
+    MessageBody: JSON.stringify({ headerHtml, scorecardHtml, scorecardUrl, teamName }),
   });
   console.log('sending to sqs');
   await sqsClient.send(command);
@@ -77,12 +77,12 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamId: st
     throw new Error('No queue url specified');
   }
 
-  const teamId = process.argv[4];
-  if (!teamId) {
+  const teamName = process.argv[4];
+  if (!teamName) {
     throw new Error('No team id specified');
   }
 
-  console.log(`processing ${teamId} ${scorecardUrl} and sending to ${queueUrl}`);
+  console.log(`processing ${teamName} ${scorecardUrl} and sending to ${queueUrl}`);
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -97,5 +97,5 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamId: st
   await findScorecardTab();
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl, scorecardUrl, teamId), 20000);
+  setInterval(processScorecardHtml(queueUrl, scorecardUrl, teamName), 20000);
 })();
