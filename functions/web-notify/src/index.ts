@@ -23,7 +23,7 @@ const handleWebNotification = async (message: unknown) => {
   await push(sendDeleteSubscriptionMessage, webNotification, [webNotification.subscription]);
 };
 
-const handleUpdate = async (message: unknown) => push(async () => {}, createNotification(validateUpdate(message)), await getSubscriptions());
+const handleUpdate = async (message: unknown) => push(sendDeleteSubscriptionMessage, createNotification(validateUpdate(message)), await getSubscriptions());
 
 const handleMessage = async (message: Update | WebNotification) => {
   console.log('Received message', message);
