@@ -23,8 +23,7 @@ data "aws_iam_policy_document" "sqs" {
     actions = ["sqs:SendMessage"]
 
     resources = [
-      var.first_team_sqs_arn,
-      var.second_team_sqs_arn
+      var.html_sqs_arn
     ]
   }
 }

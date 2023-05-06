@@ -15,14 +15,8 @@ resource "aws_lambda_function" "create-scorecard" {
   }
 }
 
-resource "aws_lambda_event_source_mapping" "create-first-team-scorecard-sqs-source" {
-  event_source_arn = var.first_team_sqs_arn
-  function_name    = aws_lambda_function.create-scorecard.function_name
-  batch_size       = 10
-}
-
-resource "aws_lambda_event_source_mapping" "create-second-team-scorecard-sqs-source" {
-  event_source_arn = var.second_team_sqs_arn
+resource "aws_lambda_event_source_mapping" "create-scorecard-sqs-source" {
+  event_source_arn = var.html_sqs_arn
   function_name    = aws_lambda_function.create-scorecard.function_name
   batch_size       = 10
 }

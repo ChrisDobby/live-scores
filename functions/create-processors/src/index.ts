@@ -15,19 +15,8 @@ npm i -g pm2
 
 const client = new EC2Client({ region: 'eu-west-2' });
 
-const getQueueUrl = (teamId: string) => {
-  switch (teamId) {
-    case '1':
-      return process.env.FIRST_TEAM_PROCESSOR_QUEUE_URL as string;
-    case '2':
-      return process.env.SECOND_TEAM_PROCESSOR_QUEUE_URL as string;
-    default:
-      return '';
-  }
-};
-
 type ScorecardUrl = { teamId: string; scorecardUrl: string };
-const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `pm2 start npm --name="team-${teamId}" -- start ${scorecardUrl} ${getQueueUrl(teamId)} ${teamId}`;
+const getStartCommand = ({ teamId, scorecardUrl }: ScorecardUrl) => `pm2 start npm --name="team-${teamId}" -- start ${scorecardUrl} ${process.env.PROCESSOR_QUEUE_URL} ${teamId}`;
 
 const createInstance = (scorecardUrls: ScorecardUrl[]) => {
   const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join('\n')}`;

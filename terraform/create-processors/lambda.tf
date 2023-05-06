@@ -10,10 +10,9 @@ resource "aws_lambda_function" "create-processors" {
 
   environment {
     variables = merge({
-      PROCESSOR_PROFILE_ARN           = var.scorecard_processor_instance_profile_arn
-      PROCESSOR_SG_ID                 = var.scorecard_processor_security_group_id,
-      FIRST_TEAM_PROCESSOR_QUEUE_URL  = var.first_team_sqs_url,
-      SECOND_TEAM_PROCESSOR_QUEUE_URL = var.second_team_sqs_url,
+      PROCESSOR_PROFILE_ARN = var.scorecard_processor_instance_profile_arn
+      PROCESSOR_SG_ID       = var.scorecard_processor_security_group_id,
+      PROCESSOR_QUEUE_URL   = var.html_sqs_url,
     }, {})
   }
 }

@@ -7,8 +7,7 @@ module "get-scorecard-urls" {
 module "create-processors" {
   source = "./create-processors"
 
-  first_team_sqs_url                       = aws_sqs_queue.first-team-scorecard-html.url
-  second_team_sqs_url                      = aws_sqs_queue.second-team-scorecard-html.url
+  html_sqs_url                             = aws_sqs_queue.scorecard-html.url
   live_scores_table_arn                    = aws_dynamodb_table.live-score-urls.arn
   live_scores_table_stream_arn             = aws_dynamodb_table.live-score-urls.stream_arn
   scorecard_processor_instance_profile_arn = module.scorecard-processor.scorecard_processor_instance_profile_arn
@@ -23,16 +22,14 @@ module "teardown-processors" {
 module "scorecard-processor" {
   source = "./scorecard-processor"
 
-  first_team_sqs_arn  = aws_sqs_queue.first-team-scorecard-html.arn
-  second_team_sqs_arn = aws_sqs_queue.second-team-scorecard-html.arn
+  html_sqs_arn = aws_sqs_queue.scorecard-html.arn
 }
 
 module "create-scorecard" {
   source = "./create-scorecard"
 
-  first_team_sqs_arn  = aws_sqs_queue.first-team-scorecard-html.arn
-  second_team_sqs_arn = aws_sqs_queue.second-team-scorecard-html.arn
-  updated_topic_arn   = aws_sns_topic.scorecard-updated.arn
+  html_sqs_arn      = aws_sqs_queue.scorecard-html.arn
+  updated_topic_arn = aws_sns_topic.scorecard-updated.arn
 }
 
 module "socket-connect" {

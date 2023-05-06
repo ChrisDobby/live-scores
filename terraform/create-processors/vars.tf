@@ -1,8 +1,4 @@
-variable "first_team_sqs_url" {
-  type = string
-}
-
-variable "second_team_sqs_url" {
+variable "html_sqs_url" {
   type = string
 }
 

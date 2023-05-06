@@ -32,8 +32,7 @@ data "aws_iam_policy_document" "sqs" {
     ]
 
     resources = [
-      var.first_team_sqs_arn,
-      var.second_team_sqs_arn
+      var.html_sqs_arn
     ]
   }
 }
