@@ -25,7 +25,7 @@ resource "aws_iam_policy" "ec2" {
 
 data "aws_iam_policy_document" "ec2" {
   statement {
-    actions = ["ec2:DescribeInstances", "ec2:TerminateInstances"]
+    actions = ["ec2:DescribeInstances", "ec2:TerminateInstances", "ec2:CreateTags"]
 
     resources = ["*"]
   }

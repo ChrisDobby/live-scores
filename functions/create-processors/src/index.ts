@@ -9,18 +9,15 @@ yum install -y nodejs
 git clone https://github.com/ChrisDobby/cleckheaton-cc.git
 cd cleckheaton-cc/live-scores/scorecard-processor
 npm ci
-npm run build
-npm i -g pm2
 `;
 
 const client = new EC2Client({ region: 'eu-west-2' });
 
 type ScorecardUrl = { teamName: string; scorecardUrl: string };
-const getStartCommand = ({ teamName, scorecardUrl }: ScorecardUrl) =>
-  `pm2 start npm --name="team-${teamName}" -- start ${scorecardUrl} ${process.env.PROCESSOR_QUEUE_URL} ${teamName}`;
+const getStartCommand = ({ teamName, scorecardUrl }: ScorecardUrl) => `npm start ${scorecardUrl} ${process.env.PROCESSOR_QUEUE_URL} ${teamName}`;
 
 const createInstance = (scorecardUrls: ScorecardUrl[]) => {
-  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join('\n')}`;
+  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join(' & ')}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
