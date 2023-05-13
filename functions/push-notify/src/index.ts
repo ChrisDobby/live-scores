@@ -7,7 +7,7 @@ const handleScorecard = async (scorecard: Scorecard) => {
   const lastPush = await getLastPush(scorecard);
   console.log(lastPush);
   const { updates, push } = getUpdate(scorecard, lastPush);
-  await Promise.all(updates.map(update => publishToSns(update)).concat(push ? updateLastPush(scorecard, push) : []));
+  await Promise.all(updates.map(update => publishToSns(update)).concat(push && updates.length ? updateLastPush(scorecard, push) : []));
 };
 
 const handleMessage = async (scorecardMessage: unknown) => {
