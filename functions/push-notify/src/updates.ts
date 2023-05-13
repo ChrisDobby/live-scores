@@ -104,8 +104,12 @@ const resultUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams 
 const updatePush = (push: Push, scorecard: Scorecard) =>
   push.inningsNumber === scorecard.innings.length ? push : { inningsNumber: scorecard.innings.length, overs: 0, wickets: [] };
 
-export const getUpdate = (scorecard: Scorecard, push: Push) =>
-  (scorecard.innings.length ? [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate, resultUpdate] : [resultUpdate]).reduce(
+export const getUpdate = (scorecard: Scorecard, push: Push) => {
+  if (scorecard.innings.length < push.inningsNumber && !scorecard.result) {
+    return { scorecard, push, updates: [] };
+  }
+
+  return (scorecard.innings.length ? [oversUpdate, wicketsUpdate, fiftyUpdate, hundredUpdate, fiveFerUpdate, tenFerUpdate, resultUpdate] : [resultUpdate]).reduce(
     (params, update) => update(params),
     {
       scorecard,
@@ -113,3 +117,4 @@ export const getUpdate = (scorecard: Scorecard, push: Push) =>
       updates: [],
     } as UpdateParams,
   );
+};
