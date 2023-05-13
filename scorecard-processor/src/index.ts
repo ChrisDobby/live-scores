@@ -1,7 +1,7 @@
 import puppeteer, { ElementHandle, Page } from 'puppeteer';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
-const oneHourMilliseconds = 60 * 60 * 1000;
+const refreshMilliseconds = 30 * 60 * 1000;
 
 let page: Page | null = null;
 
@@ -38,7 +38,7 @@ const findScorecardTab = async (teamName: string) => {
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
 const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: string) => async () => {
-  if (Date.now() - lastRefresh > oneHourMilliseconds && page) {
+  if (Date.now() - lastRefresh > refreshMilliseconds && page) {
     await refreshAndGotoScorecard();
   }
 
