@@ -1,5 +1,5 @@
 import { EC2Client, DescribeInstancesCommand, TerminateInstancesCommand, Instance, CreateTagsCommand } from '@aws-sdk/client-ec2';
-import { validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
+import { validateGameOver } from '@cleckheaton-ccc-live-scores/schema';
 
 const ec2Client = new EC2Client([]);
 
@@ -32,10 +32,7 @@ const updateInstance = async ({ InstanceId, Tags }: Instance) => {
 };
 
 const updateProcessor = async (scorecardMessage: unknown) => {
-  const scorecard = validateScorecard(scorecardMessage);
-  if (!scorecard.result || !scorecard.teamName) {
-    return;
-  }
+  validateGameOver(scorecardMessage);
 
   const command = new DescribeInstancesCommand({
     Filters: [{ Name: 'tag:Owner', Values: ['cleckheaton-cc'] }],
