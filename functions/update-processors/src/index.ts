@@ -31,8 +31,8 @@ const updateInstance = async ({ InstanceId, Tags }: Instance) => {
   }
 };
 
-const updateProcessor = async (scorecardMessage: unknown) => {
-  validateGameOver(scorecardMessage);
+const updateProcessor = async (gameOverMessage: unknown) => {
+  validateGameOver(gameOverMessage);
 
   const command = new DescribeInstancesCommand({
     Filters: [{ Name: 'tag:Owner', Values: ['cleckheaton-cc'] }],

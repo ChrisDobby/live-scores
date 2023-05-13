@@ -55,13 +55,13 @@ module "update-bucket" {
 module "update-processors" {
   source = "./update-processors"
 
-  updated_topic_arn = aws_sns_topic.scorecard-updated.arn
+  game_over_topic_arn = aws_sns_topic.game-over.arn
 }
 
 module "update-sanity" {
   source = "./update-sanity"
 
-  updated_topic_arn     = aws_sns_topic.scorecard-updated.arn
+  game_over_topic_arn   = aws_sns_topic.game-over.arn
   sanity_auth_token     = var.SANITY_AUTH_TOKEN
   live_scores_table_arn = aws_dynamodb_table.live-score-urls.arn
 }
@@ -122,3 +122,11 @@ module "delete-web-subscription" {
   subscriptions_table_arn                           = aws_dynamodb_table.live-score-subscriptions.arn
   sqs_arn                                           = aws_sqs_queue.delete-notification-subscription.arn
 }
+
+module "game-over" {
+  source = "./game-over"
+
+  updated_topic_arn   = aws_sns_topic.scorecard-updated.arn
+  game_over_topic_arn = aws_sns_topic.game-over.arn
+}
+

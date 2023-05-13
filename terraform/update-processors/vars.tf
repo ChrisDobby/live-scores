@@ -1,3 +1,3 @@
-variable "updated_topic_arn" {
+variable "game_over_topic_arn" {
   type = string
 }

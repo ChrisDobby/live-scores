@@ -11,8 +11,8 @@ const sanityTeamName = {
   secondTeam: '2nd',
 };
 
-const updateSanity = async (scorecardMessage: unknown) => {
-  const { teamName, url, result } = validateGameOver(scorecardMessage);
+const updateSanity = async (gameOverMessage: unknown) => {
+  const { teamName, url, result } = validateGameOver(gameOverMessage);
 
   const fromMatchDate = format(new Date(), 'yyyy-MM-dd');
   const toMatchDate = format(add(new Date(), { days: 1 }), 'yyyy-MM-dd');
