@@ -50,7 +50,7 @@ const handleRecord = async ({ dynamodb: { NewImage } }): Promise<RunInstancesCom
 
   console.log(JSON.stringify(NewImage, null, 2));
   const { firstTeam, secondTeam } = NewImage;
-  return createInstance([getScorecardUrl('firstTeam', firstTeam), getScorecardUrl('secondTeam', secondTeam)].filter(Boolean) as ScorecardUrl[]);
+  return firstTeam || secondTeam ? createInstance([getScorecardUrl('firstTeam', firstTeam), getScorecardUrl('secondTeam', secondTeam)].filter(Boolean) as ScorecardUrl[]) : null;
 };
 
 export const handler = async ({ Records }) => {
