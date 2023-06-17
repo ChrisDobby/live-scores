@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "push-notify" {
   function_name    = "push-notify"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/push-notify.zip"
-  source_code_hash = filebase64sha256("../functions/dist/push-notify.zip")
+  filename         = "../packages/functions/dist/push-notify.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/push-notify.zip")
   role             = aws_iam_role.push-notify.arn
 
   runtime = "nodejs18.x"

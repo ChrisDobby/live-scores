@@ -15,8 +15,8 @@
     "typescript": "^4.6.2"
   },
   "workspaces": [
-    "functions/*",
-    "libs/*",
-    "scorecard-processor"
+    "packages/*",
+    "packages/functions/*",
+    "packages/libs/*"
   ]
 }

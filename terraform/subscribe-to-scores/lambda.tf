@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "subscribe-to-scores" {
   function_name    = "subscribe-to-scores"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/subscribe-to-scores.zip"
-  source_code_hash = filebase64sha256("../functions/dist/subscribe-to-scores.zip")
+  filename         = "../packages/functions/dist/subscribe-to-scores.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/subscribe-to-scores.zip")
   role             = aws_iam_role.subscribe-to-scores.arn
 
   runtime = "nodejs18.x"

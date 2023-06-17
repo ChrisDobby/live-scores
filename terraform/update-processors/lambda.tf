@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "update-processors" {
   function_name    = "update-processors"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/update-processors.zip"
-  source_code_hash = filebase64sha256("../functions/dist/update-processors.zip")
+  filename         = "../packages/functions/dist/update-processors.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/update-processors.zip")
   role             = aws_iam_role.update-processors.arn
 
   runtime = "nodejs18.x"

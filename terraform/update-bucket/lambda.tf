@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "update-bucket" {
   function_name    = "update-bucket"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/update-bucket.zip"
-  source_code_hash = filebase64sha256("../functions/dist/update-bucket.zip")
+  filename         = "../packages/functions/dist/update-bucket.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/update-bucket.zip")
   role             = aws_iam_role.update-bucket.arn
 
   runtime = "nodejs18.x"

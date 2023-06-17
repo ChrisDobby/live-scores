@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "web-notify" {
   function_name    = "web-notify"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/web-notify.zip"
-  source_code_hash = filebase64sha256("../functions/dist/web-notify.zip")
+  filename         = "../packages/functions/dist/web-notify.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/web-notify.zip")
   role             = aws_iam_role.web-notify.arn
 
   runtime = "nodejs18.x"

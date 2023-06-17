@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "api-authoriser" {
   function_name    = "api-authoriser"
   handler          = "lib/index.handler"
-  filename         = "../functions/dist/api-authoriser.zip"
-  source_code_hash = filebase64sha256("../functions/dist/api-authoriser.zip")
+  filename         = "../packages/functions/dist/api-authoriser.zip"
+  source_code_hash = filebase64sha256("../packages/functions/dist/api-authoriser.zip")
   role             = aws_iam_role.api-authoriser.arn
 
   runtime = "nodejs18.x"
