@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+
+.turbo
+
+.vscode
+
+.DS_Store
+
+lib
+dist
+
+.terraform
+.terraform.lock.hcl
+.tfplan
