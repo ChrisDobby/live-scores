@@ -1,0 +1,14 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/api-authoriser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js",
+    "package": "mkdir -p ../dist && rm -f ../dist/api-authoriser.zip && zip -r ../dist/api-authoriser.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT"
+}

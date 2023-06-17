@@ -1,0 +1,31 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "types": {
+      "dependsOn": [
+        "^types"
+      ],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": [
+        "types",
+        "^build"
+      ],
+      "outputs": [
+        "functions/**/lib"
+      ]
+    },
+    "package": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "functions/**/dist/*.zip"
+      ],
+      "inputs": [
+        "package.json"
+      ]
+    }
+  }
+}
