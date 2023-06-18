@@ -7,7 +7,7 @@ yum install -y pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x8
 curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 yum install -y nodejs
 git clone https://github.com/ChrisDobby/live-scores.git
-cd packages/scorecard-processor
+cd live-scores/packages/scorecard-processor
 npm ci
 `;
 
