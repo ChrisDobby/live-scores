@@ -1,0 +1,70 @@
+name: Deploy live scores
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: 'Build'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm ci
+        shell: bash
+
+      - run: npm run package
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: functions
+          path: packages/functions/dist/*.zip
+          retention-days: 1
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: 'Deploy'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+          terraform_version: 1.3.6
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: functions
+          path: packages/functions/dist
+
+      - name: Initialise terraform
+        shell: bash
+        working-directory: terraform
+        run: terraform init
+
+      - name: Deploy infrastructure
+        shell: bash
+        working-directory: terraform
+        env:
+          TF_VAR_SANITY_AUTH_TOKEN: ${{ secrets.SANITY_EDIT_TOKEN }}
+          TF_VAR_VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+          TF_VAR_VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          TF_VAR_VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          TF_VAR_API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          terraform apply -auto-approve
