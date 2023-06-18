@@ -29,10 +29,10 @@ The service is deployed using [Terraform](https://www.terraform.io/). The defini
 
 The deployment workflow requires the following secrets in the Github repository:
 
-`AWS_ACCESS_KEY_ID` - AWS access key
-`AWS_SECRET_ACCESS_KEY` - AWS secret key
-`SANITY_EDIT_TOKEN` - edit token for updating the result in [Sanity](https://www.sanity.io/). Disable updating Sanity by throttling the `update-sanity` lambda
-`API_KEY` - API key for the API endpoints to subscribe to score and socket updates
-`VAPID_SUBJECT` - Webpush Vapid subject. Disable webpush by throttling the `web-notify` lambda
-`VAPID_PUBLIC_KEY` - Webpush Vapid public key. Disable webpush by throttling the `web-notify` lambda
-`VAPID_PRIVATE_KEY` - Webpush Vapid private key. Disable webpush by throttling the `web-notify` lambda
+- `AWS_ACCESS_KEY_ID` - AWS access key
+- `AWS_SECRET_ACCESS_KEY` - AWS secret key
+- `SANITY_EDIT_TOKEN` - edit token for updating the result in [Sanity](https://www.sanity.io/). Disable updating Sanity by throttling the `update-sanity` lambda
+- `API_KEY` - API key for the API endpoints to subscribe to score and socket updates
+- `VAPID_SUBJECT` - Webpush Vapid subject. Disable webpush by throttling the `web-notify` lambda
+- `VAPID_PUBLIC_KEY` - Webpush Vapid public key. Disable webpush by throttling the `web-notify` lambda
+- `VAPID_PRIVATE_KEY` - Webpush Vapid private key. Disable webpush by throttling the `web-notify` lambda
