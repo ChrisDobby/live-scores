@@ -35,6 +35,7 @@ const InningsSchema = z.object({
 
 const ScorecardSchema = z.object({
   url: z.string(),
+  club: z.string(),
   teamName: z.string(),
   result: z.string().nullable(),
   innings: z.array(InningsSchema),

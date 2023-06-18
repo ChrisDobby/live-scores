@@ -13,6 +13,7 @@ const oversUpdate = ({ scorecard, push, updates }: UpdateParams): UpdateParams =
           ...updates,
           {
             type: 'overs',
+            club: scorecard.club,
             team: scorecard.teamName,
             text: `${scorecard.innings[scorecard.innings.length - 1].batting.team} ${scorecard.innings[scorecard.innings.length - 1].batting.total}`,
           },
@@ -32,6 +33,7 @@ const wicketsUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams
               ...params.updates,
               {
                 type: 'wicket',
+                club: scorecard.club,
                 team: scorecard.teamName,
                 text: `${inning.name} ${inning.howout.join(' ')} ${inning.runs}`,
               },
@@ -55,6 +57,7 @@ const runsUpdate =
                 ...params.updates,
                 {
                   type: 'landmark',
+                  club: scorecard.club,
                   team: scorecard.teamName,
                   text: `${inning.name} ${inning.runs} from ${inning.balls} balls. ${inning.fours} 4s and ${inning.sixes} 6s`,
                 },
@@ -81,6 +84,7 @@ const wicketsTakenUpdate =
                 ...params.updates,
                 {
                   type: 'landmark',
+                  club: scorecard.club,
                   team: scorecard.teamName,
                   text: `${bowling.name} ${bowling.wickets} - ${bowling.runs} from ${bowling.overs} overs}`,
                 },
@@ -97,7 +101,8 @@ const tenFerUpdate = wicketsTakenUpdate(10);
 
 const resultUpdate = ({ scorecard, updates, push }: UpdateParams): UpdateParams => ({
   scorecard,
-  updates: !scorecard.result || scorecard.result === push.result ? updates : [...updates, { type: 'result', team: scorecard.teamName, text: `${scorecard.result}` }],
+  updates:
+    !scorecard.result || scorecard.result === push.result ? updates : [...updates, { type: 'result', club: scorecard.club, team: scorecard.teamName, text: `${scorecard.result}` }],
   push: scorecard.result === push.result ? push : { ...push, result: scorecard.result },
 });
 

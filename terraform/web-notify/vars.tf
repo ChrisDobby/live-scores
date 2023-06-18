@@ -29,3 +29,7 @@ variable "delete_notification_subscription_queue_url" {
 variable "delete_notification_subscription_queue_arn" {
   type = string
 }
+
+variable "subscriptions-table-suffix" {
+  type = string
+}

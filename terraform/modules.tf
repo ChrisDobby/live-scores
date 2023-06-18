@@ -74,6 +74,7 @@ module "update-sockets" {
   connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
   live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
   live_scores_api_name      = aws_apigatewayv2_stage.live-scores-prod.name
+  connections-table-suffix  = local.connections-table-suffix
 }
 
 module "push-notify" {
@@ -81,6 +82,7 @@ module "push-notify" {
 
   updated_topic_arn = aws_sns_topic.scorecard-updated.arn
   push_topic_arn    = aws_sns_topic.push-notification.arn
+  subscriptions-table-suffix                        = local.subscriptions-table-suffix
 }
 
 module "subscribe-to-scores" {
@@ -106,6 +108,7 @@ module "web-notify" {
   sqs_arn                                           = aws_sqs_queue.web-notify.arn
   delete_notification_subscription_queue_url        = aws_sqs_queue.delete-notification-subscription.url
   delete_notification_subscription_queue_arn        = aws_sqs_queue.delete-notification-subscription.arn
+  subscriptions-table-suffix                        = local.subscriptions-table-suffix
 }
 
 module "api_authoriser" {
@@ -121,6 +124,7 @@ module "delete-web-subscription" {
 
   subscriptions_table_arn                           = aws_dynamodb_table.live-score-subscriptions.arn
   sqs_arn                                           = aws_sqs_queue.delete-notification-subscription.arn
+  subscriptions-table-suffix                        = local.subscriptions-table-suffix
 }
 
 module "game-over" {

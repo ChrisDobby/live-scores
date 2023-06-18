@@ -17,7 +17,7 @@ resource "aws_dynamodb_table" "live-score-urls" {
 }
 
 resource "aws_dynamodb_table" "live-score-connections" {
-  name         = "cleckheaton-cc-live-score-connections"
+  name         ="cleckheaton-cc-${local.connections-table-suffix}"
   hash_key     = "connectionId"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -33,7 +33,7 @@ resource "aws_dynamodb_table" "live-score-connections" {
 }
 
 resource "aws_dynamodb_table" "live-score-subscriptions" {
-  name         = "cleckheaton-cc-live-score-subscriptions"
+  name         = "cleckheaton-cc-${local.subscriptions-table-suffix}"
   hash_key     = "endpoint"
   billing_mode = "PAY_PER_REQUEST"
 

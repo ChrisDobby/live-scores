@@ -37,7 +37,7 @@ const findScorecardTab = async (teamName: string) => {
 
 let lastScorecard: string | undefined = '';
 let lastHeader: string | undefined = '';
-const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: string) => async () => {
+const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: string, club: string) => async () => {
   if (Date.now() - lastRefresh > refreshMilliseconds && page) {
     await refreshAndGotoScorecard();
   }
@@ -53,7 +53,7 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: 
   lastHeader = headerHtml;
   const command = new SendMessageCommand({
     QueueUrl: queueUrl,
-    MessageBody: JSON.stringify({ headerHtml, scorecardHtml, scorecardUrl, teamName }),
+    MessageBody: JSON.stringify({ headerHtml, scorecardHtml, scorecardUrl, teamName, club }),
   });
   console.log(`${teamName} sending to sqs`);
   await sqsClient.send(command);
@@ -73,7 +73,12 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: 
 
   const teamName = process.argv[4];
   if (!teamName) {
-    throw new Error('No team id specified');
+    throw new Error('No team name specified');
+  }
+
+  const club = process.argv[5];
+  if (!club) {
+    throw new Error('No club specified');
   }
 
   console.log(`processing ${teamName} ${scorecardUrl} and sending to ${queueUrl}`);
@@ -91,5 +96,5 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: 
   await findScorecardTab(teamName);
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());
 
-  setInterval(processScorecardHtml(queueUrl, scorecardUrl, teamName), 20000);
+  setInterval(processScorecardHtml(queueUrl, scorecardUrl, teamName, club), 20000);
 })();

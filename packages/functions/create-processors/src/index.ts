@@ -14,10 +14,13 @@ npm ci
 const client = new EC2Client({ region: 'eu-west-2' });
 
 type ScorecardUrl = { teamName: string; scorecardUrl: string };
-const getStartCommand = ({ teamName, scorecardUrl }: ScorecardUrl) => `npm start ${scorecardUrl} ${process.env.PROCESSOR_QUEUE_URL} ${teamName}`;
+const getStartCommand =
+  (club: string) =>
+  ({ teamName, scorecardUrl }: ScorecardUrl) =>
+    `npm start ${scorecardUrl} ${process.env.PROCESSOR_QUEUE_URL} ${teamName} ${club}`;
 
-const createInstance = (scorecardUrls: ScorecardUrl[]) => {
-  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand).join(' & ')}`;
+const createInstance = (club: string, scorecardUrls: ScorecardUrl[]) => {
+  const userData = `${USER_DATA} ${scorecardUrls.map(getStartCommand(club)).join(' & ')}`;
   const command = new RunInstancesCommand({
     ImageId: 'ami-0d729d2846a86a9e7',
     InstanceType: 't2.micro',
@@ -31,7 +34,7 @@ const createInstance = (scorecardUrls: ScorecardUrl[]) => {
       {
         ResourceType: 'instance',
         Tags: [
-          { Key: 'Owner', Value: 'cleckheaton-cc' },
+          { Key: 'Owner', Value: club },
           { Key: 'InProgress', Value: scorecardUrls.length.toString() },
         ],
       },
@@ -50,7 +53,9 @@ const handleRecord = async ({ dynamodb: { NewImage } }): Promise<RunInstancesCom
 
   console.log(JSON.stringify(NewImage, null, 2));
   const { firstTeam, secondTeam } = NewImage;
-  return firstTeam || secondTeam ? createInstance([getScorecardUrl('firstTeam', firstTeam), getScorecardUrl('secondTeam', secondTeam)].filter(Boolean) as ScorecardUrl[]) : null;
+  return firstTeam || secondTeam
+    ? createInstance('cleckheaton-cc', [getScorecardUrl('firstTeam', firstTeam), getScorecardUrl('secondTeam', secondTeam)].filter(Boolean) as ScorecardUrl[])
+    : null;
 };
 
 export const handler = async ({ Records }) => {

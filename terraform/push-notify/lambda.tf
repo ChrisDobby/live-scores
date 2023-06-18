@@ -10,8 +10,8 @@ resource "aws_lambda_function" "push-notify" {
 
   environment {
     variables = merge({
-      PUSH_NOTIFY_BUCKET_NAME = aws_s3_bucket.notifications.bucket,
-      PUSH_TOPIC_ARN          = var.push_topic_arn,
+      PUSH_NOTIFY_BUCKET_SUFFIX = "notifications",
+      PUSH_TOPIC_ARN            = var.push_topic_arn,
     }, {})
   }
 }

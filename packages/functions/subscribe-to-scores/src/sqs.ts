@@ -18,6 +18,6 @@ export const addToDeleteSubscriptionQueue = async (endpoint: string) =>
   sqsClient.send(
     new SendMessageCommand({
       QueueUrl: deleteSubscriptionQueueUrl,
-      MessageBody: JSON.stringify({ endpoint }),
+      MessageBody: JSON.stringify({ endpoint, club: 'cleckheaton-cc' }),
     }),
   );

@@ -3,7 +3,6 @@ import { ApiGatewayManagementApiClient, PostToConnectionCommand } from '@aws-sdk
 import { Scorecard, validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const dynamoClient = new DynamoDBClient({ region: 'eu-west-2' });
-const TableName = 'cleckheaton-cc-live-score-connections';
 
 const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2', endpoint: `${process.env.SOCKET_ENDPOINT}` });
 
@@ -23,7 +22,7 @@ const sendToSockets = async (scorecardMessage: unknown) => {
     return;
   }
 
-  const command = new ScanCommand({ TableName });
+  const command = new ScanCommand({ TableName: `${scorecard.club}-${process.env.CONNECTIONS_TABLE_SUFFIX}` });
   const scanResult = await dynamoClient.send(command);
   if (!scanResult.Items) {
     console.log('No connections found');

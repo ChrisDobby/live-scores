@@ -7,6 +7,12 @@ resource "aws_lambda_function" "delete-web-subscription" {
 
   runtime = "nodejs18.x"
   timeout = 10
+
+  environment {
+    variables = merge({
+      SUBSCRIPTIONS_TABLE_SUFFIX = var.subscriptions-table-suffix,
+    }, {})
+  }
 }
 
 resource "aws_lambda_event_source_mapping" "delete-web-subscription" {

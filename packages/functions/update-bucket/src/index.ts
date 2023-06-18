@@ -4,8 +4,6 @@ import { getScorecardKey } from '@cleckheaton-ccc-live-scores/common';
 
 const s3Client = new S3Client({});
 
-const { SCORECARD_BUCKET_NAME: bucketName } = process.env;
-
 const putToS3 = (scorecardMessage: unknown) => {
   const scorecard = validateScorecard(scorecardMessage);
   console.log(scorecard);
@@ -17,7 +15,7 @@ const putToS3 = (scorecardMessage: unknown) => {
   console.log(`writing to ${key}`);
 
   const command = new PutObjectCommand({
-    Bucket: bucketName,
+    Bucket: `${scorecard.club}-${process.env.SCORECARD_BUCKET_SUFFIX}`,
     Key: key,
     Body: JSON.stringify(scorecard.innings),
     ACL: 'public-read',

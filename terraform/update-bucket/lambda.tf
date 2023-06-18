@@ -10,7 +10,7 @@ resource "aws_lambda_function" "update-bucket" {
 
   environment {
     variables = merge({
-      SCORECARD_BUCKET_NAME = aws_s3_bucket.scorecards.bucket,
+      SCORECARD_BUCKET_SUFFIX = "live-scorecards"
     }, {})
   }
 }
