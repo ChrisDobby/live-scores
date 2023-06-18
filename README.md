@@ -36,3 +36,6 @@ The deployment workflow requires the following secrets in the Github repository:
 - `VAPID_SUBJECT` - Webpush Vapid subject. Disable webpush by throttling the `web-notify` lambda
 - `VAPID_PUBLIC_KEY` - Webpush Vapid public key. Disable webpush by throttling the `web-notify` lambda
 - `VAPID_PRIVATE_KEY` - Webpush Vapid private key. Disable webpush by throttling the `web-notify` lambda
+
+Vapid keys can be created [here](
+https://vapidkeys.com)
