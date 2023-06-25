@@ -82,7 +82,7 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: 
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   page = await browser.newPage();
-  await page.goto(scorecardUrl);
+  await page.goto(scorecardUrl, { timeout: 60000 });
   lastRefresh = Date.now();
 
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
