@@ -1,7 +1,3 @@
-variable "SANITY_AUTH_TOKEN" {
-  type = string
-}
-
 variable "VAPID_PUBLIC_KEY" {
   type = string
 }
