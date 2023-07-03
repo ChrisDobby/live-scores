@@ -1,0 +1,18 @@
+{
+  "name": "@cleckheaton-ccc-live-scores/clear-restarts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "types": "tsc --noEmit --incremental",
+    "build": "rm -rf ./lib && esbuild ./src/index.ts --bundle --platform=node --outfile=lib/index.js --external:@aws-sdk/client-sqs",
+    "package": "mkdir -p ../dist && rm -f ../dist/clear-restarts.zip && zip -r ../dist/clear-restarts.zip lib/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.282.0",
+    "@cleckheaton-ccc-live-scores/schema": "*"
+  }
+}
