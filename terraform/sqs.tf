@@ -40,3 +40,9 @@ resource "aws_sqs_queue_policy" "web-notify" {
   queue_url = aws_sqs_queue.web-notify.id
   policy    = data.aws_iam_policy_document.web-notify.json
 }
+
+resource "aws_sqs_queue" "restart-schedule" {
+  name                       = "restart-schedule"
+  message_retention_seconds  = 300
+  visibility_timeout_seconds = 60
+}

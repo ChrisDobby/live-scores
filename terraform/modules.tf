@@ -130,3 +130,12 @@ module "game-over" {
   game_over_topic_arn = aws_sns_topic.game-over.arn
 }
 
+module "initialise-restarts" {
+  source = "./initialise-restarts"
+
+  live_scores_table_arn             = aws_dynamodb_table.live-score-urls.arn
+  live_scores_table_stream_arn      = aws_dynamodb_table.live-score-urls.stream_arn
+  restart_schedule_queue_url        = aws_sqs_queue.restart-schedule.url
+  restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
+}
+
