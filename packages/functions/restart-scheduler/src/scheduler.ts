@@ -7,12 +7,13 @@ import {
   ListSchedulesCommand,
   DeleteScheduleCommand,
 } from '@aws-sdk/client-scheduler';
+import { RestartSchedules, CreateSchedule } from '@cleckheaton-ccc-live-scores/schema';
 
 const schedulerClient = new SchedulerClient({});
 
 const getRestartScheduleGroupName = (teamName: string) => `cleckheaton-cc-}${teamName}`;
 
-export const addRestart = async (teamName: string, restartDateTime: string) => {
+const addRestart = async (teamName: string, restartDateTime: string) => {
   const groupName = getRestartScheduleGroupName(teamName);
   const { ScheduleGroups } = await schedulerClient.send(new ListScheduleGroupsCommand({}));
   if (!ScheduleGroups?.find(group => group.Name === groupName)) {
@@ -36,7 +37,7 @@ export const addRestart = async (teamName: string, restartDateTime: string) => {
   );
 };
 
-export const removeRestarts = async (teamName: string) => {
+const removeRestarts = async (teamName: string) => {
   const { Schedules } = await schedulerClient.send(new ListSchedulesCommand({ GroupName: getRestartScheduleGroupName(teamName) }));
   if (!Schedules) {
     return;
@@ -45,4 +46,19 @@ export const removeRestarts = async (teamName: string) => {
   await Promise.all(Schedules.map(({ Name, GroupName }) => schedulerClient.send(new DeleteScheduleCommand({ Name, GroupName }))));
 };
 
-export const removeRestartGroup = (teamName: string) => schedulerClient.send(new DeleteScheduleGroupCommand({ Name: getRestartScheduleGroupName(teamName) }));
+const removeRestartGroup = (teamName: string) => schedulerClient.send(new DeleteScheduleGroupCommand({ Name: getRestartScheduleGroupName(teamName) }));
+
+const createRestart = async (initialise: CreateSchedule) => {
+  await removeRestarts(initialise.teamName);
+  await addRestart(initialise.teamName, initialise.restartDateTime);
+};
+
+export const handleRestart = (restartSchedule: RestartSchedules) => {
+  switch (restartSchedule.type) {
+    case 'initialise':
+    case 'create':
+      return createRestart(restartSchedule);
+    case 'clear':
+      return removeRestartGroup(restartSchedule.teamName);
+  }
+};

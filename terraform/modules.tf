@@ -146,3 +146,9 @@ module "update-restarts" {
   restart_schedule_queue_url        = aws_sqs_queue.restart-schedule.url
   restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
 }
+
+module "restart-scheduler" {
+  source = "./restart-scheduler"
+
+  restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
+}
