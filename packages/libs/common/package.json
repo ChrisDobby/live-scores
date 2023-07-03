@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-scheduler": "^3.363.0",
     "@cleckheaton-ccc-live-scores/schema": "*"
   }
 }
