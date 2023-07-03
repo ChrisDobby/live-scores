@@ -139,3 +139,10 @@ module "initialise-restarts" {
   restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
 }
 
+module "update-restarts" {
+  source = "./update-restarts"
+
+  updated_topic_arn                 = aws_sns_topic.scorecard-updated.arn
+  restart_schedule_queue_url        = aws_sqs_queue.restart-schedule.url
+  restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
+}
