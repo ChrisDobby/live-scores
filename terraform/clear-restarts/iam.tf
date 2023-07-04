@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "sqs" {
     actions = ["sqs:SendMessage"]
 
     resources = [
-      var.var.restart_schedule_queue_arn
+      var.restart_schedule_queue_arn
     ]
   }
 }

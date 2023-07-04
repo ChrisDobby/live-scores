@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "lambda" {
 
     resources = [
       var.get_scorecard_urls_arn,
-      var.var.teardown_processors_arn
+      var.teardown_processors_arn
     ]
   }
 }

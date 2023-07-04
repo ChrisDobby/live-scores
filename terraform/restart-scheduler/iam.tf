@@ -118,6 +118,6 @@ data "aws_iam_policy_document" "state-machine" {
 }
 
 resource "aws_iam_role_policy_attachment" "state-machine" {
-  role       = aws_iam_role.assume.name
+  role       = aws_iam_role.scheduler-invoke.name
   policy_arn = aws_iam_policy.state-machine.arn
 }
