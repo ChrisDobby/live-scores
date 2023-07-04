@@ -152,3 +152,12 @@ module "restart-scheduler" {
 
   restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
 }
+
+module "restart-processor" {
+  source = "./restart-processor"
+
+  live_scores_table_arn   = aws_dynamodb_table.live-score-urls.arn
+  live_scores_table_name  = aws_dynamodb_table.live-score-urls.name
+  teardown_processors_arn = module.teardown-processors.invoke_arn
+  get_scorecard_urls_arn  = module.get-scorecard-urls.invoke_arn
+}
