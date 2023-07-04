@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = 'cleckheaton-cc-live-score-connections';
+const TableName = `${process.env.CONNECTIONS_TABLE}`;
 
 export const handler = async event => {
   const { connectionId } = event.requestContext;

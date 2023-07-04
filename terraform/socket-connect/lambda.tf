@@ -7,6 +7,12 @@ resource "aws_lambda_function" "socket-connect" {
 
   runtime = "nodejs18.x"
   timeout = 10
+
+  environment {
+    variables = merge({
+      CONNECTIONS_TABLE = var.connections_table_name,
+    }, {})
+  }
 }
 
 resource "aws_lambda_permission" "socket-connect" {

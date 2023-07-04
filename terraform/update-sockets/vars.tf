@@ -17,3 +17,7 @@ variable "live_scores_execution_arn" {
 variable "live_scores_api_name" {
   type = string
 }
+
+variable "connections_table_name" {
+  type = string
+}

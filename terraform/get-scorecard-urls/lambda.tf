@@ -10,6 +10,12 @@ resource "aws_lambda_function" "get-scorecard-urls" {
   memory_size = 256
 
   layers = ["arn:aws:lambda:eu-west-2:604776666101:layer:chrome-aws-lambda:1"]
+
+  environment {
+    variables = merge({
+      LIVE_SCORE_URLS_TABLE = var.live_scores_table_name,
+    }, {})
+  }
 }
 
 resource "aws_cloudwatch_log_group" "get-scorecard-urls" {

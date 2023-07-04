@@ -6,7 +6,7 @@ import { addToDeleteSubscriptionQueue, addToWebNotifyQueue } from './sqs';
 const client = new DynamoDBClient({});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = 'cleckheaton-cc-live-score-subscriptions';
+const TableName = `${process.env.SUBSCRIPTIONS_TABLE}`;
 
 const update = async (subscription: Subscription) => {
   await documentClient.send(new PutCommand({ TableName, Item: subscription }));
