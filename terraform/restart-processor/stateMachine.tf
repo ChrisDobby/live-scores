@@ -1,7 +1,12 @@
 resource "aws_sfn_state_machine" "restart-processor" {
-  name     = "my-state-machine"
+  name     = "restart-processor"
   role_arn = aws_iam_role.restart-processor.arn
   type     = "EXPRESS"
+
+  logging_configuration {
+    include_execution_data = true
+    level                  = "ALL"
+  }
 
   definition = <<EOF
 {
