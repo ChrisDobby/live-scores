@@ -52,9 +52,9 @@ const removeRestarts = async (teamName: string) => {
 
 const removeRestartGroup = (teamName: string) => schedulerClient.send(new DeleteScheduleGroupCommand({ Name: getRestartScheduleGroupName(teamName) }));
 
-const createRestart = async (initialise: CreateSchedule) => {
-  await removeRestarts(initialise.teamName);
-  await addRestart(initialise.teamName, initialise.restartDateTime);
+const createRestart = async ({ teamName, restartDateTime }: CreateSchedule) => {
+  await removeRestarts(teamName);
+  await addRestart(teamName, restartDateTime);
 };
 
 export const handleRestart = (restartSchedule: RestartSchedules) => {
