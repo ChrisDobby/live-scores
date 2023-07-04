@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const CreateScheduleSchema = z.object({
-  type: z.union([z.literal('initialise'), z.literal('create')]),
+  type: z.literal('create'),
   teamName: z.string(),
   restartDateTime: z.string().datetime(),
 });

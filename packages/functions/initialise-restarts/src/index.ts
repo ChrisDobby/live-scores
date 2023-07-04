@@ -11,7 +11,7 @@ const sendRestartMessage = async (teamName: string, restartDateTime: string) =>
       QueueUrl: restartScheduleQueueUrl,
       MessageBody: JSON.stringify(
         validateRestartSchedule({
-          type: 'initialise',
+          type: 'create',
           restartDateTime,
           teamName,
         }),

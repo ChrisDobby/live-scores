@@ -150,7 +150,8 @@ module "update-restarts" {
 module "restart-scheduler" {
   source = "./restart-scheduler"
 
-  restart_schedule_queue_arn        = aws_sqs_queue.restart-schedule.arn
+  restart_schedule_queue_arn = aws_sqs_queue.restart-schedule.arn
+  restart_processor_arn      = module.restart-processor.arn
 }
 
 module "restart-processor" {

@@ -7,6 +7,13 @@ resource "aws_lambda_function" "restart-scheduler" {
 
   runtime = "nodejs18.x"
   timeout = 10
+
+  environment {
+    variables = merge({
+      RESTART_PROCESSOR_ARN = var.restart_processor_arn,
+      SCHEDULER_ROLE_ARN    = aws_iam_role.scheduler-invoke.arn
+    }, {})
+  }
 }
 
 resource "aws_lambda_event_source_mapping" "restart-scheduler-sqs-source" {

@@ -11,6 +11,9 @@ import { RestartSchedules, CreateSchedule } from '@cleckheaton-ccc-live-scores/s
 
 const schedulerClient = new SchedulerClient({});
 
+const restartProcessorArn = `${process.env.RESTART_PROCESSOR_ARN}`;
+const schedulerRoleArn = `${process.env.SCHEDULER_ROLE_ARN}`;
+
 const getRestartScheduleGroupName = (teamName: string) => `cleckheaton-cc-}${teamName}`;
 
 const addRestart = async (teamName: string, restartDateTime: string) => {
@@ -30,8 +33,9 @@ const addRestart = async (teamName: string, restartDateTime: string) => {
         Mode: 'OFF',
       },
       Target: {
-        Arn: '',
-        RoleArn: '',
+        Arn: restartProcessorArn,
+        RoleArn: schedulerRoleArn,
+        Input: JSON.stringify({ date: new Date().toDateString() }),
       },
     }),
   );
@@ -55,7 +59,6 @@ const createRestart = async (initialise: CreateSchedule) => {
 
 export const handleRestart = (restartSchedule: RestartSchedules) => {
   switch (restartSchedule.type) {
-    case 'initialise':
     case 'create':
       return createRestart(restartSchedule);
     case 'clear':
