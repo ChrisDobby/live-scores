@@ -4,6 +4,7 @@ resource "aws_sfn_state_machine" "restart-processor" {
   type     = "EXPRESS"
 
   logging_configuration {
+    log_destination        = "${aws_cloudwatch_log_group.restart-processor.arn}:*"
     include_execution_data = true
     level                  = "ALL"
   }
@@ -91,4 +92,9 @@ resource "aws_sfn_state_machine" "restart-processor" {
   }
 }
 EOF
+}
+
+resource "aws_cloudwatch_log_group" "restart-processor" {
+  name              = "//aws/vendedlogs/states/restart-processor-logs"
+  retention_in_days = 14
 }
