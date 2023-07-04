@@ -5,3 +5,7 @@ variable "live_scores_execution_arn" {
 variable "connections_table_arn" {
   type = string
 }
+
+variable "connections_table_name" {
+  type = string
+}

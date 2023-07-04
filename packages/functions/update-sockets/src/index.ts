@@ -3,7 +3,7 @@ import { ApiGatewayManagementApiClient, PostToConnectionCommand } from '@aws-sdk
 import { Scorecard, validateScorecard } from '@cleckheaton-ccc-live-scores/schema';
 
 const dynamoClient = new DynamoDBClient({ region: 'eu-west-2' });
-const TableName = 'cleckheaton-cc-live-score-connections';
+const TableName = `${process.env.CONNECTIONS_TABLE}`;
 
 const apiGatewayClient = new ApiGatewayManagementApiClient({ region: 'eu-west-2', endpoint: `${process.env.SOCKET_ENDPOINT}` });
 

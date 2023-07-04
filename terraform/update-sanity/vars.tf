@@ -5,7 +5,3 @@ variable "game_over_topic_arn" {
 variable "sanity_auth_token" {
   type = string
 }
-
-variable "live_scores_table_arn" {
-  type = string
-}

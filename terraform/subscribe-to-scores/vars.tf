@@ -6,6 +6,10 @@ variable "subscriptions_table_arn" {
   type = string
 }
 
+variable "subscriptions_table_name" {
+  type = string
+}
+
 variable "web_notify_queue_url" {
   type = string
 }

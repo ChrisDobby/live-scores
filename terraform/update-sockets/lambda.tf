@@ -11,6 +11,7 @@ resource "aws_lambda_function" "update-sockets" {
   environment {
     variables = merge({
       SOCKET_ENDPOINT = replace(var.invoke_url, "wss://", "https://")
+      CONNECTIONS_TABLE = var.connections_table_name,
     }, {})
   }
 }

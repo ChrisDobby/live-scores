@@ -1,7 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, PutCommandOutput } from '@aws-sdk/lib-dynamodb';
 
-const TableName = 'cleckheaton-cc-live-score-urls';
+const TableName = `${process.env.LIVE_SCORE_URLS_TABLE}`;
 
 type ScorecardUrls = {
   firstTeam: string | null;

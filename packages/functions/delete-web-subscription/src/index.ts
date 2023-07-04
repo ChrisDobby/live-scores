@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const documentClient = DynamoDBDocumentClient.from(client);
 
-const TableName = 'cleckheaton-cc-live-score-subscriptions';
+const TableName = `${process.env.SUBSCRIPTIONS_TABLE}`;
 
 const unsubscribe = async ({ endpoint }: { endpoint: string }) => {
   await documentClient.send(new DeleteCommand({ TableName, Key: { endpoint } }));

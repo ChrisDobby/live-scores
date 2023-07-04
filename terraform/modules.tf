@@ -1,7 +1,8 @@
 module "get-scorecard-urls" {
   source = "./get-scorecard-urls"
 
-  live_scores_table_arn = aws_dynamodb_table.live-score-urls.arn
+  live_scores_table_arn  = aws_dynamodb_table.live-score-urls.arn
+  live_scores_table_name = aws_dynamodb_table.live-score-urls.name
 }
 
 module "create-processors" {
@@ -37,6 +38,7 @@ module "socket-connect" {
 
   live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
   connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+  connections_table_name    = aws_dynamodb_table.live-score-connections.name
 }
 
 module "socket-disconnect" {
@@ -44,6 +46,7 @@ module "socket-disconnect" {
 
   live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
   connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+  connections_table_name    = aws_dynamodb_table.live-score-connections.name
 }
 
 module "update-bucket" {
@@ -63,7 +66,6 @@ module "update-sanity" {
 
   game_over_topic_arn   = aws_sns_topic.game-over.arn
   sanity_auth_token     = var.SANITY_AUTH_TOKEN
-  live_scores_table_arn = aws_dynamodb_table.live-score-urls.arn
 }
 
 module "update-sockets" {
@@ -72,6 +74,7 @@ module "update-sockets" {
   updated_topic_arn         = aws_sns_topic.scorecard-updated.arn
   invoke_url                = aws_apigatewayv2_stage.live-scores-prod.invoke_url
   connections_table_arn     = aws_dynamodb_table.live-score-connections.arn
+  connections_table_name    = aws_dynamodb_table.live-score-connections.name
   live_scores_execution_arn = aws_apigatewayv2_api.live-scores.execution_arn
   live_scores_api_name      = aws_apigatewayv2_stage.live-scores-prod.name
 }
@@ -88,6 +91,7 @@ module "subscribe-to-scores" {
 
   notifications_execution_arn = aws_apigatewayv2_api.notifications.execution_arn
   subscriptions_table_arn     = aws_dynamodb_table.live-score-subscriptions.arn
+  subscriptions_table_name    = aws_dynamodb_table.live-score-subscriptions.name
   web_notify_queue_url        = aws_sqs_queue.web-notify.url
   web_notify_queue_arn        = aws_sqs_queue.web-notify.arn
 
@@ -100,6 +104,7 @@ module "web-notify" {
 
   push_topic_arn                                    = aws_sns_topic.push-notification.arn
   subscriptions_table_arn                           = aws_dynamodb_table.live-score-subscriptions.arn
+  subscriptions_table_name                          = aws_dynamodb_table.live-score-subscriptions.name
   vapid_subject                                     = var.VAPID_SUBJECT
   vapid_public_key                                  = var.VAPID_PUBLIC_KEY
   vapid_private_key                                 = var.VAPID_PRIVATE_KEY
@@ -120,6 +125,7 @@ module "delete-web-subscription" {
   source = "./delete-web-subscription"
 
   subscriptions_table_arn                           = aws_dynamodb_table.live-score-subscriptions.arn
+  subscriptions_table_name                          = aws_dynamodb_table.live-score-subscriptions.name
   sqs_arn                                           = aws_sqs_queue.delete-notification-subscription.arn
 }
 
