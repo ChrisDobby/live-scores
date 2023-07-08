@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { validateWebNotification, validateSubscription, Subscription } from '@cleckheaton-ccc-live-scores/schema';
 import { addToDeleteSubscriptionQueue, addToWebNotifyQueue } from './sqs';
 
@@ -21,24 +21,20 @@ const unsubscribe = async (endpoint: string) => {
   await addToDeleteSubscriptionQueue(endpoint);
 };
 
-export const handler = async ({ body, path }) => {
+export const handler = async ({ body, routeKey, pathParameters }) => {
+  console.log(JSON.stringify(routeKey, null, 2));
+  console.log(JSON.stringify(pathParameters, null, 2));
   console.log(JSON.stringify(body, null, 2));
-  const validateResult = validateSubscription(JSON.parse(body));
-  if (!validateResult.success) {
-    return { statusCode: 400, body: JSON.stringify(validateResult.error) };
-  }
 
-  const { data: subscription } = validateResult;
-  const route = path.split('/').slice(-1)[0];
-  switch (route) {
-    case 'subscribe':
-      await subscribe(subscription);
+  switch (routeKey) {
+    case 'POST /':
+      await subscribe(validateSubscription(JSON.parse(body)));
       break;
-    case 'unsubscribe':
-      unsubscribe(subscription.endpoint);
+    case 'DELETE /{endpoint}':
+      await unsubscribe(pathParameters.endpoint);
       break;
-    case 'update':
-      update(subscription);
+    case 'PUT /':
+      await update(validateSubscription(JSON.parse(body)));
       break;
   }
 

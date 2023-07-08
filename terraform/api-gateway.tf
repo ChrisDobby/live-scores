@@ -22,7 +22,7 @@ resource "aws_apigatewayv2_integration" "notifications-subscribe" {
 
 resource "aws_apigatewayv2_route" "notifications-subscribe" {
   api_id             = aws_apigatewayv2_api.notifications.id
-  route_key          = "POST /subscribe"
+  route_key          = "POST /"
   target             = "integrations/${aws_apigatewayv2_integration.notifications-subscribe.id}"
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.notifications.id
@@ -34,13 +34,13 @@ resource "aws_apigatewayv2_integration" "notifications-unsubscribe" {
 
   connection_type      = "INTERNET"
   integration_uri      = module.subscribe-to-scores.invoke_arn
-  integration_method   = "POST"
+  integration_method   = "DELETE"
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
 resource "aws_apigatewayv2_route" "notifications-unsubscribe" {
   api_id             = aws_apigatewayv2_api.notifications.id
-  route_key          = "POST /unsubscribe"
+  route_key          = "DELETE /{endpoint}"
   target             = "integrations/${aws_apigatewayv2_integration.notifications-unsubscribe.id}"
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.notifications.id
@@ -53,13 +53,13 @@ resource "aws_apigatewayv2_integration" "notifications-update" {
 
   connection_type      = "INTERNET"
   integration_uri      = module.subscribe-to-scores.invoke_arn
-  integration_method   = "POST"
+  integration_method   = "PUT"
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
 resource "aws_apigatewayv2_route" "notifications-update" {
   api_id             = aws_apigatewayv2_api.notifications.id
-  route_key          = "POST /update"
+  route_key          = "PUT /"
   target             = "integrations/${aws_apigatewayv2_integration.notifications-update.id}"
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.notifications.id
