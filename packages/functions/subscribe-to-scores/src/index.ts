@@ -26,15 +26,21 @@ export const handler = async ({ body, httpMethod, pathParameters, ...args }) => 
   console.log(JSON.stringify(body, null, 2));
   console.log(args);
 
+  const validateResult = validateSubscription(JSON.parse(body));
+  if (!validateResult.success) {
+    return { statusCode: 400, body: JSON.stringify(validateResult.error) };
+  }
+
+  const { data: subscription } = validateResult;
   switch (httpMethod) {
     case 'POST':
-      await subscribe(validateSubscription(JSON.parse(body)));
+      await subscribe(subscription);
       break;
     case 'DELETE':
-      await unsubscribe(pathParameters.endpoint);
+      await unsubscribe(subscription.endpoint);
       break;
     case 'PUT':
-      await update(validateSubscription(JSON.parse(body)));
+      await update(subscription);
       break;
   }
 

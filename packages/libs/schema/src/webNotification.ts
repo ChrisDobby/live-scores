@@ -18,4 +18,4 @@ export type WebNotification = z.infer<typeof WebNotificationSchema>;
 export type Subscription = z.infer<typeof SubscriptionSchema>;
 
 export const validateWebNotification = (webNotification: unknown): WebNotification => WebNotificationSchema.parse(webNotification);
-export const validateSubscription = (subscription: unknown) => SubscriptionSchema.parse(subscription);
+export const validateSubscription = (subscription: unknown) => SubscriptionSchema.safeParse(subscription);
