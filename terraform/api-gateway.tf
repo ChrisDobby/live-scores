@@ -110,7 +110,7 @@ resource "aws_apigatewayv2_integration" "notifications-unsubscribe" {
 
 resource "aws_apigatewayv2_route" "notifications-unsubscribe" {
   api_id             = aws_apigatewayv2_api.notifications.id
-  route_key          = "DELETE /{endpoint}"
+  route_key          = "DELETE /"
   target             = "integrations/${aws_apigatewayv2_integration.notifications-unsubscribe.id}"
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.notifications.id
