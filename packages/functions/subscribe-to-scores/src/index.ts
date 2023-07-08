@@ -21,19 +21,19 @@ const unsubscribe = async (endpoint: string) => {
   await addToDeleteSubscriptionQueue(endpoint);
 };
 
-export const handler = async ({ body, routeKey, pathParameters }) => {
-  console.log(JSON.stringify(routeKey, null, 2));
+export const handler = async ({ body, httpMethod, pathParameters }) => {
+  console.log(httpMethod);
   console.log(JSON.stringify(pathParameters, null, 2));
   console.log(JSON.stringify(body, null, 2));
 
-  switch (routeKey) {
-    case 'POST /':
+  switch (httpMethod) {
+    case 'POST':
       await subscribe(validateSubscription(JSON.parse(body)));
       break;
-    case 'DELETE /{endpoint}':
+    case 'DELETE':
       await unsubscribe(pathParameters.endpoint);
       break;
-    case 'PUT /':
+    case 'PUT':
       await update(validateSubscription(JSON.parse(body)));
       break;
   }
