@@ -21,10 +21,10 @@ const unsubscribe = async (endpoint: string) => {
   await addToDeleteSubscriptionQueue(endpoint);
 };
 
-export const handler = async ({ body, httpMethod, pathParameters }) => {
+export const handler = async ({ body, httpMethod, pathParameters, ...args }) => {
   console.log(httpMethod);
-  console.log(JSON.stringify(pathParameters, null, 2));
   console.log(JSON.stringify(body, null, 2));
+  console.log(args);
 
   switch (httpMethod) {
     case 'POST':
