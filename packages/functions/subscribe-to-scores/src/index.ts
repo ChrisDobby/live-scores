@@ -21,10 +21,9 @@ const unsubscribe = async (endpoint: string) => {
   await addToDeleteSubscriptionQueue(endpoint);
 };
 
-export const handler = async ({ body, httpMethod, pathParameters, ...args }) => {
+export const handler = async ({ body, httpMethod }) => {
   console.log(httpMethod);
   console.log(JSON.stringify(body, null, 2));
-  console.log(args);
 
   const validateResult = validateSubscription(JSON.parse(body));
   if (!validateResult.success) {
