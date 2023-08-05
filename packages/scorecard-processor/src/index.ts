@@ -86,7 +86,9 @@ const processScorecardHtml = (queueUrl: string, scorecardUrl: string, teamName: 
   lastRefresh = Date.now();
 
   const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
-  await acceptButton.click();
+  if (acceptButton) {
+    await acceptButton.click();
+  }
 
   await findScorecardTab(teamName);
   page.$eval('#nvScorecardTab-tab', (el: any) => el.click());

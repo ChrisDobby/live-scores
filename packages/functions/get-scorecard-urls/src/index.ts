@@ -15,10 +15,7 @@ const getScorecardUrlForRow = async (row?: ElementHandle<Element>) => {
   }
 
   const func = onclick._remoteObject.description;
-  const relativeUrl = func?.substring(
-    func.indexOf("window.open('/website") + 13,
-    func.indexOf("',")
-  );
+  const relativeUrl = func?.substring(func.indexOf("window.open('/website") + 13, func.indexOf("',"));
 
   return relativeUrl ? `${BASE_URL}${relativeUrl}` : null;
 };
@@ -32,12 +29,8 @@ const getTeamRow = async (row: ElementHandle<Element>) => {
 const getCleckheatonScorecardUrls = async (page: Page) => {
   const rows = await page.$$('tr');
   const teamRows = await Promise.all(rows.map(getTeamRow));
-  const firstTeamRow = teamRows.find(
-    ({ team }) => team === 'Cleckheaton CC - 1st XI'
-  )?.row;
-  const secondTeamRow = teamRows.find(
-    ({ team }) => team === 'Cleckheaton CC - 2nd XI'
-  )?.row;
+  const firstTeamRow = teamRows.find(({ team }) => team === 'Cleckheaton CC - 1st XI')?.row;
+  const secondTeamRow = teamRows.find(({ team }) => team === 'Cleckheaton CC - 2nd XI')?.row;
 
   return {
     firstTeam: await getScorecardUrlForRow(firstTeamRow),
@@ -62,12 +55,12 @@ export const handler = async () => {
   });
   try {
     const page = await browser.newPage();
-    await page.goto(
-      'https://bradfordcl.play-cricket.com/website/web_pages/315262'
-    );
+    await page.goto('https://bradfordcl.play-cricket.com/website/web_pages/315262');
 
     const [acceptButton] = await page.$x('//button[text()="ACCEPT"]');
-    await acceptButton.click();
+    if (acceptButton) {
+      await acceptButton.click();
+    }
 
     const urls = await getCleckheatonScorecardUrls(page);
     if (urls) {
